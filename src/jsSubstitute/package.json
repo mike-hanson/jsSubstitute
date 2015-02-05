@@ -1,0 +1,10 @@
+{
+  "name": "jsSubstitute",
+  "version": "0.0.0",
+  "description": "Substitute (mocks, fakes) inspired by NSubstitute for .NET",
+  "main": "src/main.js",
+  "author": {
+    "name": "Mike Hanson",
+    "email": "mike@testpossessed.com"
+  }
+}
