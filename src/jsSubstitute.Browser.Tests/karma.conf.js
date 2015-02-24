@@ -16,16 +16,11 @@ module.exports = function(config)
             'src/**/*.js': 'coverage'
         },
 
-        reporters: ['story', 'coverage', 'html'],
+        reporters: ['story', 'coverage'],
 
         coverageReporter: {
             type: 'html',
             dir: __dirname + '/Karma/Coverage'
-        },
-
-        htmlReporter: {
-            outputDir: 'Karma/Html',
-            templatePath: __dirname + '/jasmine_template.html'
         },
 
         port: 9876,

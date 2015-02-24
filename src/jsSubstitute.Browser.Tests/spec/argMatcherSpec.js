@@ -1,4 +1,4 @@
-﻿ddescribe('Arg', function(){
+﻿describe('Arg', function(){
     var arg;
 
     function assertReturnsValidAssertionFunction(target){
@@ -96,7 +96,7 @@
         });
     });
 
-    describe('hasSameState - field name and value matching', function(){
+    describe('hasState - field name and value matching', function(){
         it('Should be defined', function(){
             expect(arg.hasState).toBeDefined();
             expect(typeof arg.hasState).toBe('function');

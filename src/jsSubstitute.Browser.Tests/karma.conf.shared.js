@@ -1,10 +1,10 @@
 ﻿module.exports = {
-    basePath: './src',
+    basePath: '../jsSubstitute',
 
     frameworks: ['jasmine'],
 
     files: [
-        '*.js',
+        'main.js',
         __dirname + '/spec/*.js'
     ],
 

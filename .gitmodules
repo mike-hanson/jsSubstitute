@@ -1,0 +1,4 @@
+[submodule "jsSubstitute-npm"]
+	path = jsSubstitute-npm
+	url = https://github.com/testpossessed/jsSubstitute-npm.git
+	branch = master

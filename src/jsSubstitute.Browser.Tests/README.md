@@ -1,0 +1,3 @@
+﻿# jsSubstitute.Browser.Tests
+
+

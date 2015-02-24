@@ -1,8 +1,8 @@
 {
   "name": "jsSubstitute",
-  "version": "0.0.0",
-  "description": "Substitute (mocks, fakes) inspired by NSubstitute for .NET",
-  "main": "src/main.js",
+  "version": "1.0.0",
+  "description": "Substitute (mocks, fakes) provider inspired by NSubstitute for .NET",
+  "main": "main.js",
   "author": {
     "name": "Mike Hanson",
     "email": "mike@testpossessed.com"

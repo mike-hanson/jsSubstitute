@@ -1,0 +1,18 @@
+{
+  "name": "jsSubtituteBuild",
+  "version": "1.0.0",
+  "homepage": "https://github.com/testpossessed/jsSubstitute",
+  "authors": [
+    "Mike Hanson <mike@testpossessed.com>"
+  ],
+  "description": "Build and test jsSubtitute for distribution via npm, bower and nuget",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
