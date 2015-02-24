@@ -297,13 +297,13 @@
         it('Should throw error on received', function(){
             expect(function(){
                 sub.received('method');
-            }).toThrowError('method did not receive the expected 1 calls.');
+            }).toThrowError('method did not receive the expected 1 calls, actually received 0 calls.');
         });
 
         it('Should throw error on receivedWith', function(){
             expect(function(){
                 sub.receivedWith('method', 1, 2);
-            }).toThrowError('method did not receive a call with the expected arguments');
+            }).toThrow();
         });
     });
 });

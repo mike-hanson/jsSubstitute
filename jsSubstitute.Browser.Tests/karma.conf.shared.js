@@ -4,8 +4,8 @@
     frameworks: ['jasmine'],
 
     files: [
-        'main.js',
-        __dirname + '/spec/*.js'
+        'index.js',
+        __dirname + '/specs/*.js'
     ],
 
     exclude: [

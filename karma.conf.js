@@ -2,12 +2,12 @@ module.exports = function(config){
     config.set({
         basePath: __dirname,
         files: [
-            'jsSubstitute/main.js',
+            'jsSubstitute/index.js',
             'jsSubstitute.Browser.Tests/specs/**/*.js'
         ],
         exclude: [],
         preprocessors: {
-            'jsSubstitute/main.js': 'coverage'
+            'jsSubstitute/index.js': 'coverage'
         },
 
         reporters: ['story', 'coverage', 'junit'],

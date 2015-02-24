@@ -14,7 +14,12 @@
             }
             
             // TODO: Probably need to do more intelligent matching here
-            return source.toString() === target.toString();
+            if (source && sourceType === 'object') {
+                return source.toString() === target.toString();
+            }
+            else {
+                return source === target;
+            }
         }        ;
         this.any = function (type) {
             return function (arg) {
@@ -48,6 +53,11 @@
                 return true;
             };
         };
+        this.hasProperty = function (name, value) {
+            return function (arg) {
+                return typeof arg === 'object' && arg[name] !== undefined && arg[name] === value;
+            }
+        }
     }
     
     function PromiseSubstitute() {
@@ -102,6 +112,35 @@
         this.getArgs = function (index) {
             return calls[index];
         };
+        
+        function argsMatch(source, target) {
+            if (!source) {
+                return false;
+            }
+            
+            if (!target) {
+                return false;
+            }
+            
+            for (var i = 1; i < source.length; i++) {
+                var sourceArg = source[i];
+                var targetArg = target[i + 1]; //first argument is method name from substitute
+                var isMatch = false;
+                if (typeof targetArg === 'function') {
+                    isMatch = targetArg(sourceArg);
+                }
+                else {
+                    isMatch = targetArg === sourceArg;
+                }
+                
+                if (!isMatch) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
         this.hasCallWithArgs = function (args) {
             for (var i = 0; i < calls.length; i++) {
                 if (argsMatch(calls[i], args)) {
@@ -134,33 +173,17 @@
         this.getCallsThrough = function () {
             return callsThrough;
         };
-
-        function argsMatch(source, target) {
-            if (!source) {
-                return false;
+        this.getActualCallsString = function () {
+            var result = '';
+            
+            if (calls.length === 0) {
+                result = 'No actual calls were received';
+            }
+            else {
+                result = 'Actual Call :\n    ' + calls.join('\n    ' + this.name);
             }
             
-            if (!target) {
-                return false;
-            }
-            
-            for (var i = 1; i < source.length; i++) {
-                var sourceArg = source[i];
-                var targetArg = target[i + 1]; //first argument is method name from substitute
-                var isMatch = false;
-                if (typeof targetArg === 'function') {
-                    isMatch = targetArg(sourceArg);
-                }
-                else {
-                    isMatch = targetArg === sourceArg;
-                }
-                
-                if (!isMatch) {
-                    return false;
-                }
-            }
-            
-            return true;
+            return result;
         }
     }
     
@@ -198,7 +221,7 @@
             
             var result = state.callCount() === expectedCallCount;
             if (!result && throwErrors) {
-                throw new Error(methodName + ' did not receive the expected ' + expectedCallCount + ' calls.');
+                throw new Error(methodName + ' did not receive the expected ' + expectedCallCount + ' calls, actually received ' + state.callCount() + ' calls.');
             }
             return result;
         };
@@ -207,7 +230,16 @@
             
             var result = state.hasCallWithArgs(arguments);
             if (!result && throwErrors) {
-                throw new Error(methodName + ' did not receive a call with the expected arguments');
+                throw new Error(methodName + ' did not receive a call with the expected arguments.\n' + state.getActualCallsString());
+            }
+            return result;
+        };
+        this.didNotReceive = function (methodName) {
+            var state = states.get(methodName);
+            var callCount = state.callCount();
+            var result = callCount === 0;
+            if (!result && throwErrors) {
+                throw new Error(methodName + ' received ' + callCount + ' unexpected calls to ' + methodName);
             }
             return result;
         };
@@ -246,6 +278,10 @@
             }
             return result;
         };
+        this.clearCalls = function (methodName) {
+            var state = states.get(methodName);
+            state.clearCalls();
+        }
         
         function buildFunction(name) {
             return function () {

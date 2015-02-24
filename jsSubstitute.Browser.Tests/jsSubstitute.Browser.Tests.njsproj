@@ -34,17 +34,17 @@
     <Compile Include="karma.conf.debug.js" />
     <Compile Include="karma.conf.js" />
     <Compile Include="karma.conf.shared.js" />
-    <Compile Include="spec\argMatcherSpec.js" />
-    <Compile Include="spec\factorySpec.js" />
-    <Compile Include="spec\promiseSpec.js" />
-    <Compile Include="spec\substituteSpec.js" />
+    <Compile Include="specs\argMatcherSpec.js" />
+    <Compile Include="specs\factorySpec.js" />
+    <Compile Include="specs\promiseSpec.js" />
+    <Compile Include="specs\substituteSpec.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="StartKarma.cmd" />
     <Content Include="StartKarmaDebug.cmd" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="spec\" />
+    <Folder Include="specs\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
 </Project>

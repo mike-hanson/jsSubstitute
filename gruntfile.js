@@ -1,6 +1,9 @@
 module.exports = function(grunt){
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+		bumpup: {
+			files: ['jsSubstitute-bower/bower.json', 'jsSubstitute-npm/package.json']
+		},
         jasmine_node: {
             options: {
                 forceExit: false
@@ -14,8 +17,8 @@ module.exports = function(grunt){
                 beautify: false
             },
             lib: {
-                src: ['jsSubstitute/main.js'],
-                dest: 'bladeUx/BladeUx/js/bladeUx.angular.js'
+                src: ['jsSubstitute/index.js'],
+                dest: 'jsSubstitute-bower/jsSubstitute.min.js'
             }
         },
         copy: {
@@ -23,48 +26,20 @@ module.exports = function(grunt){
                 files: [
                     {
                         expand: true,
-                        cwd: 'Shields.PCG.Web.Client/app/css/images',
-                        src: ['*'],
-                        dest: 'Shields.PCG.Web/App/css/images/',
+                        cwd: 'jsSubstitute',
+                        src: ['index.js'],
+                        dest: 'jsSubstitute-bower/',
                         filter: 'isFile',
-                        flatten: true
+                        flatten: true,
+                        rename: function(dest, src){
+                            return dest + 'jsSubstitute.js';
+                        }
                     },
                     {
                         expand: true,
-                        cwd: 'Shields.PCG.Web.Client/app/fonts',
-                        src: ['**/*'],
-                        dest: 'Shields.PCG.Web/App/fonts/',
-                        filter: 'isFile',
-                        flatten: false
-                    },
-                    {
-                        expand: true,
-                        cwd: 'app',
-                        src: ['favicon.ico'],
-                        dest: 'Shields.PCG.Web/App/',
-                        flatten: true
-                    },
-                    {
-                        expand: true,
-                        cwd: 'Shields.PCG.Web.Client/bower_components/font-awesome/fonts',
-                        src: ['*'],
-                        dest: 'Shields.PCG.Web/App/fonts/',
-                        filter: 'isFile',
-                        flatten: true
-                    },
-                    {
-                        expand: true,
-                        cwd: 'Shields.PCG.Web.Client/bower_components/bootstrap-css-only/fonts',
-                        src: ['*'],
-                        dest: 'Shields.PCG.Web/App/fonts/',
-                        filter: 'isFile',
-                        flatten: true
-                    },
-                    {
-                        expand: true,
-                        cwd: 'Shields.PCG.Web.Client/bower_components/angular-ui-grid',
-                        src: ['*.eot', '*.ttf', '*.svg', '*.woff'],
-                        dest: 'Shields.PCG.Web/App/css/',
+                        cwd: 'jsSubstitute',
+                        src: ['index.js'],
+                        dest: 'jsSubstitute-npm/',
                         filter: 'isFile',
                         flatten: true
                     }
@@ -72,7 +47,7 @@ module.exports = function(grunt){
             }
         },
         karma: {
-            unit: {
+            browser: {
                 configFile: 'karma.conf.js',
                 background: true,
                 autoWatch: false,
@@ -80,40 +55,13 @@ module.exports = function(grunt){
             }
         },
         watch: {
-            nodes: {
-                files: ['Shields.PCG.Import.MailReader.Tests/specs/**/*.js', 'Shields.PCG.Listener.Tests/specs**/*.js', 'Shields.PCG.Listener/**/*.js', 'Shields.PCG.Import.MailReader/**/*.js'],
-                tasks: ['jasmine_node']
-            },
-            tpls: {
-                files: ['bladeUx/BladeUx/tpls/**/*.html'],
-                tasks: ['ngtemplates']
-            },
-            less: {
-                files: ['Shields.PCG.Web.Client/app/less/*.less', 'bladeUx/BladeUx/less/*.less'],
-                tasks: ['less']
-            },
-            css: {
-                files: ['Shields.PCG.Web.Client/app/css/*.css'],
-                tasks: ['cssmin']
-            },
-            scripts: {
-                files: ['Shields.PCG.Web.Client/app/js/**/*.js', 
-                    'bladeUx/BladeUx/js/angular/**/*.js'],
-                tasks: ['uglify']
-            },
-            assets: {
-                files: ['Shields.PCG.Web.Client/app/fonts/*.*', 'Shields.PCG.Web.Client/app/css/images/*.*'],
-                tasks: ['copy']
-            },
-            karma: {
+            all: {
                 files: [
-                    'karma.conf.js',
-                    'Shields.PCG.Web.Client/app/js/**/*.js',
-                    'Shields.PCG.Web.Client.Tests/**/*.js',
-                    'bladeUx/BladeUx/js/angular/**/*.js',
-                    'bladeUx/BladeUx.Specs/specs/**/*.js'
+                    'jsSubstitute.Node.Tests/specs/**/*.js',
+                    'jsSubstitute/index.js',
+                    'jsSubstitute.Browser.Tests/specs/**/*.js'
                 ],
-                tasks: ['karma:unit:run']
+                tasks: ['karma:browser:run', 'jasmine_node', 'uglify', 'copy']
             },
             grunt: {
                 files: ['gruntfile.js']
@@ -121,5 +69,5 @@ module.exports = function(grunt){
         }
     });
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
-    grunt.registerTask('default', ['ngtemplates', 'uglify', 'less', 'cssmin', 'copy', 'karma', 'jasmine_node', 'watch']);
+    grunt.registerTask('default', ['karma', 'jasmine_node', 'uglify', 'copy', 'watch']);
 };

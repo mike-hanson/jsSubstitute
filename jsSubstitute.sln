@@ -12,9 +12,23 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E61F56E8-0905-448A-9102-9CE72997DFCD}"
 	ProjectSection(SolutionItems) = preProject
 		bower.json = bower.json
-		..\gruntfile.js = ..\gruntfile.js
+		gruntfile.js = gruntfile.js
 		karma.conf.js = karma.conf.js
 		package.json = package.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jsSubstitute-bower", "jsSubstitute-bower", "{A4D4162B-2512-4E88-9B75-3D4AF8BD0083}"
+	ProjectSection(SolutionItems) = preProject
+		jsSubstitute-bower\bower.json = jsSubstitute-bower\bower.json
+		jsSubstitute-bower\LICENSE = jsSubstitute-bower\LICENSE
+		jsSubstitute-bower\README.md = jsSubstitute-bower\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jsSubstitute-npm", "jsSubstitute-npm", "{BB1D220A-3B5E-46ED-980F-7CEF90F37F26}"
+	ProjectSection(SolutionItems) = preProject
+		jsSubstitute-npm\LICENSE = jsSubstitute-npm\LICENSE
+		jsSubstitute-npm\package.json = jsSubstitute-npm\package.json
+		jsSubstitute-npm\README.md = jsSubstitute-npm\README.md
 	EndProjectSection
 EndProject
 Global
