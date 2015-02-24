@@ -31,7 +31,6 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="config.js" />
     <Compile Include="karma.conf.debug.js" />
     <Compile Include="karma.conf.js" />
     <Compile Include="karma.conf.shared.js" />

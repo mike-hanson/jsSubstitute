@@ -7,6 +7,16 @@ Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "jsSubstitute", "jsSubstitut
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "jsSubstitute.Browser.Tests", "jsSubstitute.Browser.Tests\jsSubstitute.Browser.Tests.njsproj", "{298AD88E-40C8-4B57-9786-A60CBCE6F900}"
 EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "jsSubstitute.Node.Tests", "jsSubstitute.Node.Tests\jsSubstitute.Node.Tests.njsproj", "{7A8235D9-E6B9-4D63-8C81-507C6E749582}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E61F56E8-0905-448A-9102-9CE72997DFCD}"
+	ProjectSection(SolutionItems) = preProject
+		bower.json = bower.json
+		..\gruntfile.js = ..\gruntfile.js
+		karma.conf.js = karma.conf.js
+		package.json = package.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +31,10 @@ Global
 		{298AD88E-40C8-4B57-9786-A60CBCE6F900}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{298AD88E-40C8-4B57-9786-A60CBCE6F900}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{298AD88E-40C8-4B57-9786-A60CBCE6F900}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A8235D9-E6B9-4D63-8C81-507C6E749582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A8235D9-E6B9-4D63-8C81-507C6E749582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A8235D9-E6B9-4D63-8C81-507C6E749582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A8235D9-E6B9-4D63-8C81-507C6E749582}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
