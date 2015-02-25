@@ -345,18 +345,19 @@
         };
         this.arg = new Arg();
     }
-    
-    if (window) {
-        window.substitute = new Factory();
+
+    var factory = new Factory();
+    if(typeof window !== 'undefined'){
+        window.substitute = factory;
     }
-    else if (require && typeof require === 'function') {
-        if (define && typeof define === 'function') {
-            define([], function () {
-                return new Factory();
+    else if(typeof require === 'function'){
+        if(typeof define === 'function'){
+            define([], function(){
+                return factory;
             });
         }
-        else {
-            module.exports = new Factory();
+        else{
+            module.exports = factory;
         }
     }
 })();
