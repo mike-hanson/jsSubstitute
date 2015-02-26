@@ -363,4 +363,49 @@
             expect(report.toString().indexOf('\n    1: method2 (1, [object Object]);')).toBeGreaterThan(-1);
         });
     });
+
+    describe('Invoke Arguments', function(){
+        
+        beforeEach(function(){
+            sub = factory.for(target, false);
+        });
+
+        it('Should define a method to invoke a function argument with arguments', function(){
+            expect(sub.invokeArgWith).toBeDefined();
+            expect(typeof sub.invokeArgWith).toBe('function');
+        });
+
+        it('Should expect at least the method name and argument index', function(){
+            expect(sub.invokeArgWith.length).toBe(2);
+        });
+
+        it('Should call valid function argument', function(){
+            var wasCalled = false;
+            sub.method(1, function(){
+                wasCalled = true;
+            });
+            sub.invokeArgWith('method', 1);
+            expect(wasCalled).toBeTruthy();
+        });
+
+        it('Should throw an error if specified argument is not a function', function()
+        {
+            sub.method(1, function(){
+            });
+            expect(function(){
+                sub.invokeArgWith('method', 0);
+            }).toThrowError('Cannot invoke argument 0 of method, it is not a function');
+        });
+
+        it('Should pass specified arguments to function', function(){
+            var arg1, arg2;
+            sub.method(1, function(a, b){
+                arg1 = a;
+                arg2 = b;
+            });
+            sub.invokeArgWith('method', 1, 1, 'string');
+            expect(arg1).toBe(1);
+            expect(arg2).toBe('string');
+        });
+    });
 });

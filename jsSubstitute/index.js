@@ -116,6 +116,9 @@
             return calls.length;
         };
         this.getArgs = function (index) {
+            if(!index){
+                index = calls.length - 1;
+            }
             return calls[index];
         };
         
@@ -299,7 +302,18 @@
         this.getActualCallsString = function(methodName){
             var state = states.get(methodName);
             return state.getActualCallsString();
-        }
+        };
+        this.invokeArgWith = function(methodName, argIndex){
+            var state = states.get(methodName);
+            var actualArgs = argumentsSubset(arguments, 2);
+            var arg = state.getArgs()[argIndex];
+            if(typeof arg === 'function'){
+                arg.apply(null, actualArgs);
+            }
+            else{
+                throw new Error('Cannot invoke argument ' + argIndex + ' of ' + methodName + ', it is not a function');
+            }
+        };
         
         function buildFunction(name) {
             return function () {
@@ -377,5 +391,17 @@
         else{
             module.exports = factory;
         }
+    }
+
+    function argumentsSubset(args, startIndex){
+        var result = [];
+
+        if(args.length){
+            for(var i = startIndex; i < args.length; i++){
+                result.push(args[i]);
+            }
+        }
+
+        return result;
     }
 })();
