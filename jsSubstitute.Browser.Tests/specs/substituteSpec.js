@@ -365,7 +365,6 @@
     });
 
     describe('Invoke Arguments Of Last Call', function(){
-        
         beforeEach(function(){
             sub = factory.for(target, false);
         });
@@ -393,7 +392,7 @@
             sub.method(1, function(){
             });
             expect(function(){
-                sub.invokeArgOfLastCallWith('method', 0);
+            sub.invokeArgOfLastCallWith('method', 0);
             }).toThrowError('Cannot invoke argument 0 of method, it is not a function');
         });
 

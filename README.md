@@ -115,8 +115,8 @@ This method allows you to invoke a specific argument of the last call to a subst
 mySub.method(1, function(a1, a2){
 	// do something here
 }
- // invoke the anonymous function with (1, 3)
-mySub.invokeArgWith('method', 1, 1, 3);
+// invoke the anonymous function with (1, 3)
+mySub.invokeArgOfLastCallWith('method', 1, 1, 3);
 ```
 
 **invokeArgOfCallWith**
@@ -129,7 +129,7 @@ mySub.method(2, function(a1, a2){
 	// do something here
 }
 // invoke the second argument of the second call with (1, 3)
-mySub.invokeArgWith('method', 1, 1, 1, 3);
+mySub.invokeArgOfCallWith('method', 1, 1, 1, 3);
 ```
 
 #### Assert
