@@ -100,8 +100,14 @@
         this.callThrough = function (args) {
             return type[methodName].apply(type, args);
         };
-        this.addCall = function (args) {
-            calls.push(args);
+        this.addCall = function (args){
+            var actualArgs = [];
+            if(args.length){
+                for(var i = 0; i < args.length; i++){
+                    actualArgs.push(args[i]);
+                }
+            }
+            calls.push(actualArgs);
         };
         this.clearCalls = function () {
             calls = [];
@@ -122,9 +128,9 @@
                 return false;
             }
             
-            for (var i = 1; i < source.length; i++) {
+            for (var i = 0; i < source.length; i++) {
                 var sourceArg = source[i];
-                var targetArg = target[i + 1]; //first argument is method name from substitute
+                var targetArg = target[i + 1]; // first argument is name of method
                 var isMatch = false;
                 if (typeof targetArg === 'function') {
                     isMatch = targetArg(sourceArg);
@@ -180,7 +186,15 @@
                 result = 'No actual calls were received';
             }
             else {
-                result = 'Actual Call :\n    ' + calls.join('\n    ' + this.name);
+                result = 'Actual call/s :';
+                for(var i = 0; i < calls.length; i++){
+                    result += '\n    ' + (i + 1) + ': ' + this.name + ' (';
+                    if(calls[i].length){
+                        result += calls[i].join(', ');
+                    }
+
+                    result += ');';
+                }
             }
             
             return result;
@@ -196,7 +210,7 @@
         this.get = function (methodName) {
             for (var i = 0; i < states.length; i++) {
                 var state = states[i];
-                if (state && state.name == methodName) {
+                if (state && state.name === methodName) {
                     return state;
                 }
             }
@@ -278,9 +292,13 @@
             }
             return result;
         };
-        this.clearCalls = function (methodName) {
+        this.clearCalls = function(methodName){
             var state = states.get(methodName);
             state.clearCalls();
+        };
+        this.getActualCallsString = function(methodName){
+            var state = states.get(methodName);
+            return state.getActualCallsString();
         }
         
         function buildFunction(name) {

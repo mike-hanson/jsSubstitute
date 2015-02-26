@@ -108,7 +108,9 @@
         });
         it('Should report method was called at least once with specified arguments using a comparer function', function(){
             sub.method(1, 2);
-            expect(sub.receivedWith('method', 1, function (arg){ return arg === 2})).toBe(true);
+            expect(sub.receivedWith('method', 1, function(arg){
+                return arg === 2;
+            })).toBe(true);
         });
     });
 
@@ -304,6 +306,61 @@
             expect(function(){
                 sub.receivedWith('method', 1, 2);
             }).toThrow();
+        });
+    });
+
+    describe('Report Calls', function(){
+        beforeEach(function(){
+            sub = factory.for(target, false);
+        });
+
+        it('Should define a method to return a report of actual calls for a method', function(){
+            expect(sub.getActualCallsString).toBeDefined();
+            expect(typeof sub.getActualCallsString).toBe('function');
+        });
+
+        it('Should report no calls correctly', function(){
+            var report = sub.getActualCallsString('method');
+            expect(report).toBe('No actual calls were received');
+        });
+
+        it('Should start report correctly when calls exist', function(){
+            sub.method();
+            var report = sub.getActualCallsString('method');
+            expect(report.substr(0, 15)).toBe('Actual call/s :');
+        });
+
+        it('Should report a single call without arguments correctly', function(){
+            sub.method2();
+            var report = sub.getActualCallsString('method2');
+            expect(report.toString().indexOf('\n    1: method2 ();')).toBeGreaterThan(-1);
+        });
+
+        it('Should report a single call with single single argument correctly', function(){
+            sub.method2(1);
+            var report = sub.getActualCallsString('method2');
+            expect(report.toString().indexOf('\n    1: method2 (1);')).toBeGreaterThan(-1);
+        });
+
+        it('Should report a single call with multiple simple arguments correctly', function(){
+            sub.method2(1, 'string');
+            var report = sub.getActualCallsString('method2');
+            expect(report.toString().indexOf('\n    1: method2 (1, string);')).toBeGreaterThan(-1);
+        });
+
+        it('Should report multiple calls with mixed simple arguments correctly', function(){
+            sub.method2(1);
+            sub.method2(1, 'string');
+            var report = sub.getActualCallsString('method2');
+            expect(report.toString().indexOf('\n    1: method2 (1);')).toBeGreaterThan(-1);
+            expect(report.toString().indexOf('\n    2: method2 (1, string);')).toBeGreaterThan(-1);
+        });
+
+        it('Should report call with object argument correctly', function(){
+            sub.method2(1, {field1: 1, field2: 'string'});
+            var report = sub.getActualCallsString('method2');
+            console.log(report);
+            expect(report.toString().indexOf('\n    1: method2 (1, [object Object]);')).toBeGreaterThan(-1);
         });
     });
 });
