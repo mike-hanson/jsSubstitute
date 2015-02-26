@@ -363,4 +363,101 @@
             expect(report.toString().indexOf('\n    1: method2 (1, [object Object]);')).toBeGreaterThan(-1);
         });
     });
+
+    describe('Invoke Arguments Of Last Call', function(){
+        
+        beforeEach(function(){
+            sub = factory.for(target, false);
+        });
+
+        it('Should define a method to invoke a function argument with arguments', function(){
+            expect(sub.invokeArgOfLastCallWith).toBeDefined();
+            expect(typeof sub.invokeArgOfLastCallWith).toBe('function');
+        });
+
+        it('Should expect at least the method name and argument index', function(){
+            expect(sub.invokeArgOfLastCallWith.length).toBe(2);
+        });
+
+        it('Should call valid function argument', function(){
+            var wasCalled = false;
+            sub.method(1, function(){
+                wasCalled = true;
+            });
+            sub.invokeArgOfLastCallWith('method', 1);
+            expect(wasCalled).toBeTruthy();
+        });
+
+        it('Should throw an error if specified argument is not a function', function()
+        {
+            sub.method(1, function(){
+            });
+            expect(function(){
+                sub.invokeArgOfLastCallWith('method', 0);
+            }).toThrowError('Cannot invoke argument 0 of method, it is not a function');
+        });
+
+        it('Should pass specified arguments to function', function(){
+            var arg1, arg2;
+            sub.method(1, function(a, b){
+                arg1 = a;
+                arg2 = b;
+            });
+            sub.invokeArgOfLastCallWith('method', 1, 1, 'string');
+            expect(arg1).toBe(1);
+            expect(arg2).toBe('string');
+        });
+    });
+
+    describe('Invoke Arguments Of Specific Call', function(){
+        
+        beforeEach(function(){
+            sub = factory.for(target, false);
+        });
+
+        it('Should define a method to invoke a function argument with arguments', function(){
+            expect(sub.invokeArgOfCallWith).toBeDefined();
+            expect(typeof sub.invokeArgOfCallWith).toBe('function');
+        });
+
+        it('Should expect at least the method name, call index and argument index', function(){
+            expect(sub.invokeArgOfCallWith.length).toBe(3);
+        });
+
+        it('Should call valid function argument', function(){
+            var calledBy;
+            sub.method(1, function(){
+                calledBy = 1;
+            });
+            sub.method(2, function(){
+                calledBy = 2;
+            });
+            sub.invokeArgOfCallWith('method', 1, 1);
+            expect(calledBy).toBe(2);
+        });
+
+        it('Should throw an error if specified argument is not a function', function()
+        {
+            sub.method(1, function(){
+            });
+            sub.method(2, function(){
+            });
+            expect(function(){
+                sub.invokeArgOfCallWith('method', 1, 0);
+            }).toThrowError('Cannot invoke argument 0 of call 1 of method, it is not a function');
+        });
+
+        it('Should pass specified arguments to function', function(){
+            var arg1, arg2;
+            sub.method(1, function(a, b){
+            });
+            sub.method(2, function(a, b){
+                arg1 = a;
+                arg2 = b;
+            });
+            sub.invokeArgOfCallWith('method', 1, 1, 1, 'string');
+            expect(arg1).toBe(1);
+            expect(arg2).toBe('string');
+        });
+    });
 });

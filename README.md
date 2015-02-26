@@ -109,6 +109,29 @@ The following method is exposed by a substitute as a helper during the Act phase
 **clearCalls**
 This method allows you to clear all calls to a specific method, this can be useful when a method may be called several times and you want to reset before a specific interaction that results in a call to the method.  This can help to make tests more readable.
 
+**invokeArgOfLastCallWith**
+This method allows you to invoke a specific argument of the last call to a substitute, optionally with arguments that will be passed through.  This is helpful to test invocation of callback functions passed to a method.  The second argument to this method is the index of the argument to invoke, all subsequent arguments are passed through
+```javascript
+mySub.method(1, function(a1, a2){
+	// do something here
+}
+ // invoke the anonymous function with (1, 3)
+mySub.invokeArgWith('method', 1, 1, 3);
+```
+
+**invokeArgOfCallWith**
+This method behaves the same as the previous one except it allows you to specify the call and argument index.  This is useful where the same methods is called multiple times during a test, for example *on('event', ...)* methods 
+```javascript
+mySub.method(1, function(a1, a2){
+	// do something here
+}
+mySub.method(2, function(a1, a2){
+	// do something here
+}
+// invoke the second argument of the second call with (1, 3)
+mySub.invokeArgWith('method', 1, 1, 1, 3);
+```
+
 #### Assert
 The following methods are exposed by a substitute to support interaction assertions.  All assertion methods return a boolean result.  However you can change this behaviour either globally or at the point of creating a substitute.
 
@@ -183,6 +206,11 @@ mySub.receivedWith('method1', substitute.arg.hasState(state));
 This method allows you to assert that an argument has a property (field) and that it has a specified value.
 ```javascript
 mySub.receivedWith('method1', substitute.arg.hasProperty('field1', 1));
+```
+
+Additionally you pass a predicate function to *receivedWith" to validate an argument.  The predicate will be passed the value of the argument at that position and must return a boolean indicating a match.
+```javascript
+mySub.receivedWith('method1', function(arg){ return arg === 1;});
 ```
 
 If none of the above methods allow you assert what you need then you can always resort to getting actual argument values and making assertions against them using your assertion framework.  The factory exposes a method for this purpose
