@@ -1,4 +1,10 @@
-﻿describe('jsSubstitute Factory', function(){
+﻿var substitute = substitute || {};
+
+if (typeof require === 'function') {
+	substitute = require('../src/index.js');
+}
+
+describe('jsSubstitute Factory', function () {
     var factory, expectedError;
     beforeEach(function(){
         factory = substitute;
@@ -95,8 +101,6 @@
             }
         });
         expect(substitute.constructor).toBeDefined();
-
-        // NB: this will fail if tests are run in IE<10
         expect(substitute.constructor.name).toBe('Substitute');
     });
 

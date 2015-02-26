@@ -389,21 +389,6 @@
         this.arg = new Arg();
     }
 
-    var factory = new Factory();
-    if(typeof window !== 'undefined'){
-        window.substitute = factory;
-    }
-    else if(typeof require === 'function'){
-        if(typeof define === 'function'){
-            define([], function(){
-                return factory;
-            });
-        }
-        else{
-            module.exports = factory;
-        }
-    }
-
     function argumentsSubset(args, startIndex){
         var result = [];
 
@@ -414,5 +399,20 @@
         }
 
         return result;
+    }
+
+    var factory = new Factory();
+    if (typeof window !== 'undefined') {
+    	window.substitute = factory;
+    }
+    else if (typeof require === 'function') {
+    	if (typeof define === 'function') {
+    		define([], function () {
+    			return factory;
+    		});
+    	}
+    	else {
+    		module.exports = factory;
+    	}
     }
 })();

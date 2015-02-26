@@ -8,7 +8,7 @@ module.exports = function(grunt){
             options: {
                 forceExit: false
             },
-            unit: ['jsSubstitute.Node.Tests/specs']
+            nodemodule: ['specs']
         },
         uglify: {
             options: {
@@ -17,7 +17,7 @@ module.exports = function(grunt){
                 beautify: false
             },
             lib: {
-                src: ['jsSubstitute/index.js'],
+                src: ['src/index.js'],
                 dest: 'jsSubstitute-bower/jsSubstitute.min.js'
             }
         },
@@ -26,7 +26,7 @@ module.exports = function(grunt){
                 files: [
                     {
                         expand: true,
-                        cwd: 'jsSubstitute',
+                        cwd: 'src',
                         src: ['index.js'],
                         dest: 'jsSubstitute-bower/',
                         filter: 'isFile',
@@ -37,7 +37,7 @@ module.exports = function(grunt){
                     },
                     {
                         expand: true,
-                        cwd: 'jsSubstitute',
+                        cwd: 'src',
                         src: ['index.js'],
                         dest: 'jsSubstitute-npm/',
                         filter: 'isFile',
@@ -57,9 +57,8 @@ module.exports = function(grunt){
         watch: {
             all: {
                 files: [
-                    'jsSubstitute.Node.Tests/specs/**/*.js',
-                    'jsSubstitute/index.js',
-                    'jsSubstitute.Browser.Tests/specs/**/*.js'
+                    'specs/**/*.js',
+                    'src/index.js'
                 ],
                 tasks: ['karma:browser:run', 'jasmine_node', 'uglify', 'copy']
             },
@@ -70,4 +69,5 @@ module.exports = function(grunt){
     });
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
     grunt.registerTask('default', ['karma', 'jasmine_node', 'uglify', 'copy', 'watch']);
+    grunt.registerTask('test', ['karma', 'jasmine_node']);
 };

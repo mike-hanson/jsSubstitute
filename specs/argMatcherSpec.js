@@ -1,10 +1,11 @@
-﻿describe('Arg', function(){
-    var arg;
+﻿var substitute = substitute || {};
 
-    function assertReturnsValidAssertionFunction(target){
-        expect(typeof target).toBe('function');
-        expect(target.length).toBe(1);
-    };
+if (typeof require === 'function') {
+	substitute = require('../src/index.js');
+}
+
+describe('Arg', function () {
+    var arg;
 
     beforeEach(function(){
         arg = substitute.arg;
@@ -114,4 +115,9 @@
             expect(arg.hasState({ number: 1, string: 'string', obj: { one: 'one', two: 'two', three: 'three' } })({ number: 1, string: 'string', obj: { one: 'one', two: 'two', three: 'three' } })).toBeTruthy();
         });
     });
+	
+	function assertReturnsValidAssertionFunction(target) {
+		expect(typeof target).toBe('function');
+		expect(target.length).toBe(1);
+	}	;
 });

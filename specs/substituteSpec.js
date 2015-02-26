@@ -1,4 +1,10 @@
-﻿describe('jsSubstitute Substitute', function(){
+﻿var substitute = substitute || {};
+
+if (typeof require === 'function') {
+	substitute = require('../src/index.js');
+}
+
+describe('jsSubstitute Substitute', function () {
     var factory, sub, target;
     beforeEach(function(){
         factory = substitute;
@@ -82,7 +88,7 @@
         it('Shold throw an error if method not being tracked', function(){
             expect(function(){
                 sub.received('badMethod');
-            }).toThrowError('badMethod is not being tracked by this substitute, check it exists at the time the substitute was created');
+            }).toThrow(new Error('badMethod is not being tracked by this substitute, check it exists at the time the substitute was created'));
         });
     });
 
@@ -97,7 +103,7 @@
         it('Should throw an error if method not being tracked', function(){
             expect(function(){
                 sub.receivedWith('badMethod');
-            }).toThrowError('badMethod is not being tracked by this substitute, check it exists at the time the substitute was created');
+            }).toThrow(new Error('badMethod is not being tracked by this substitute, check it exists at the time the substitute was created'));
         });
         it('Should report method was never called with specified argument values', function(){
             expect(sub.receivedWith('method', 1, 2)).toBe(false);
@@ -251,7 +257,7 @@
         it('Should throw error if no calls received for method', function(){
             expect(function(){
                 sub.argsForCall('method', 0);
-            }).toThrowError('No calls received for method');
+            }).toThrow(new Error('No calls received for method'));
         });
 
         it('Should return array of arguments to specified call', function(){
@@ -299,7 +305,7 @@
         it('Should throw error on received', function(){
             expect(function(){
                 sub.received('method');
-            }).toThrowError('method did not receive the expected 1 calls, actually received 0 calls.');
+            }).toThrow(new Error('method did not receive the expected 1 calls, actually received 0 calls.'));
         });
 
         it('Should throw error on receivedWith', function(){
@@ -393,7 +399,7 @@
             });
             expect(function(){
             sub.invokeArgOfLastCallWith('method', 0);
-            }).toThrowError('Cannot invoke argument 0 of method, it is not a function');
+            }).toThrow(new Error('Cannot invoke argument 0 of method, it is not a function'));
         });
 
         it('Should pass specified arguments to function', function(){
@@ -443,7 +449,7 @@
             });
             expect(function(){
                 sub.invokeArgOfCallWith('method', 1, 0);
-            }).toThrowError('Cannot invoke argument 0 of call 1 of method, it is not a function');
+            }).toThrow(new Error('Cannot invoke argument 0 of call 1 of method, it is not a function'));
         });
 
         it('Should pass specified arguments to function', function(){

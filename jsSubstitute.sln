@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22310.1
+VisualStudioVersion = 14.0.22609.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "jsSubstitute", "jsSubstitute\jsSubstitute.njsproj", "{57C5F81C-EB6F-4AC8-AFF9-99D77D46180D}"
 EndProject
@@ -10,25 +10,46 @@ EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "jsSubstitute.Node.Tests", "jsSubstitute.Node.Tests\jsSubstitute.Node.Tests.njsproj", "{7A8235D9-E6B9-4D63-8C81-507C6E749582}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E61F56E8-0905-448A-9102-9CE72997DFCD}"
-	ProjectSection(SolutionItems) = preProject
-		bower.json = bower.json
-		gruntfile.js = gruntfile.js
-		karma.conf.js = karma.conf.js
-		package.json = package.json
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jsSubstitute-bower", "jsSubstitute-bower", "{A4D4162B-2512-4E88-9B75-3D4AF8BD0083}"
 	ProjectSection(SolutionItems) = preProject
 		jsSubstitute-bower\bower.json = jsSubstitute-bower\bower.json
+		jsSubstitute-bower\jsSubstitute.js = jsSubstitute-bower\jsSubstitute.js
+		jsSubstitute-bower\jsSubstitute.min.js = jsSubstitute-bower\jsSubstitute.min.js
 		jsSubstitute-bower\LICENSE = jsSubstitute-bower\LICENSE
 		jsSubstitute-bower\README.md = jsSubstitute-bower\README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "jsSubstitute-npm", "jsSubstitute-npm", "{BB1D220A-3B5E-46ED-980F-7CEF90F37F26}"
 	ProjectSection(SolutionItems) = preProject
+		jsSubstitute-npm\index.js = jsSubstitute-npm\index.js
 		jsSubstitute-npm\LICENSE = jsSubstitute-npm\LICENSE
 		jsSubstitute-npm\package.json = jsSubstitute-npm\package.json
 		jsSubstitute-npm\README.md = jsSubstitute-npm\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DC840F5D-49AD-43C2-937E-CF1AC7A7A045}"
+	ProjectSection(SolutionItems) = preProject
+		src\index.js = src\index.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "specs", "specs", "{D1A895E3-1658-4031-8797-D2C091E4A869}"
+	ProjectSection(SolutionItems) = preProject
+		specs\argMatcherSpec.js = specs\argMatcherSpec.js
+		specs\factorySpec.js = specs\factorySpec.js
+		specs\promiseSpec.js = specs\promiseSpec.js
+		specs\substituteSpec.js = specs\substituteSpec.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{5B581316-0CA7-47EA-B558-48158A36558B}"
+	ProjectSection(SolutionItems) = preProject
+		bower.json = bower.json
+		gruntfile.js = gruntfile.js
+		karma.conf.js = karma.conf.js
+		LICENSE = LICENSE
+		package.json = package.json
+		package.nuspec = package.nuspec
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global

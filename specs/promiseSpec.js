@@ -1,4 +1,10 @@
-﻿describe('PromiseSubstitute', function(){
+﻿var substitute = substitute || {};
+
+if (typeof require === 'function') {
+	substitute = require('../src/index.js');
+}
+
+describe('PromiseSubstitute', function () {
     var promise, sub;
     beforeEach(function(){
         var target = {
