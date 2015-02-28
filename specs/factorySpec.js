@@ -8,14 +8,14 @@ describe('jsSubstitute Factory', function () {
     var factory, expectedError;
     beforeEach(function(){
         factory = substitute;
-        expectedError = new Error('jsSubstitute can only create substitutes for objects or functions');
+        expectedError = new Error('jsSubstitute can only create substitutes for objects, functions or an array of method names');
     });
 
     it('Should be defined', function(){
         expect(factory).toBeDefined();
     });
 
-    it('Should provide a method to create a substitute for an object', function(){
+    it('Should provide a method to create a substitute', function(){
         expect(factory.for).toBeDefined();
         expect(typeof factory.for).toBe('function');
     });
@@ -63,10 +63,10 @@ describe('jsSubstitute Factory', function () {
             factory.for('some string');
         }).toThrow(expectedError);
     });
-    it('Should throw an error if argument is and array', function(){
+    it('Should not throw an error if argument is an array', function(){
         expect(function(){
             factory.for(['one', 'two', 'three']);
-        }).toThrow(expectedError);
+        }).not.toThrow(expectedError);
     });
     it('Should not throw an error if argument is an object literal', function(){
         expect(function(){
@@ -77,9 +77,7 @@ describe('jsSubstitute Factory', function () {
             });
         }).not.toThrow(expectedError);
     });
-
     it('Should not throw an error if argument is an object constructed from a function', function(){
-
         var ctor = function(){
         };
         expect(function(){

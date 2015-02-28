@@ -37,20 +37,23 @@ define(['jsSubstitute'], function(substitute){
 });
 ```
 
-Once you have the factory you create a substitute by passing a real instance of an object or an object literal that represents the 'interface' of the object to the **for** method like this
+Once you have the factory you create a substitute by passing a real instance of an object or an a representation of the 'interface' of the object or an array of strings representing the methods to the **for** method.  The 'interface' can be specified using an object literal that has all the fields and methods without implementation or an array of method names.  The latter is great if you only want to test behaviour interaction with the substitute, if you need to also test state i.e. fields values you will need to use an object literal or a stub.
 
 ```javascript
+// using an object literal as an interface
 var iDoSomething = {method1: function(){}, method2: function(){}};
 var mySub = substitute.for(iDoSomething);
-```
 
+// using an array of method names
+var names = ['doThis', 'doThat'];
+var mySub = substitute.for(names);
+```
 Now you have your substitute your can continue the Arrange step of the test and pass it as a dependency to another object or function.  Something like this (details of the full set of options for configuring a substitute will follow)
 
 ```javascript
 mySub.callsThrough('method1');
 var mySut = new MyObject(mySub);
 ```
-
 Once all is arranged you can Act by doing something with your system under test that interacts with the substitute.
 
 ```javascript
@@ -98,7 +101,7 @@ var promise = mySub.returnsPromise('method1');
 ```
 
 **callsThrough**
-This method allows you to arrange for the substitute to call through to the underlying object.  This is useful if you have a substitute for a real or stubbed object.
+This method allows you to arrange for the substitute to call through to the underlying object.  This is useful if you have a substitute for a real or stubbed object.  Note if your substitute was created from an array of names calling this method will throw an error as there is no underlying implementation to be called.
 ```javascript
 mySub.callsThrough('method1');
 ```

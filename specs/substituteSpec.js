@@ -465,4 +465,32 @@ describe('jsSubstitute Substitute', function () {
             expect(arg2).toBe('string');
         });
     });
+
+    describe('Substitute from Array of Method Names', function (){
+	    var methodNames = ['one', 'two', 'three'];
+    	beforeEach(function (){
+		    sub = substitute.for(methodNames);
+    	});
+
+		it('Should have one method', function(){
+			expect(sub.one).toBeDefined();
+			expect(typeof sub.one).toBe('function');
+		});
+
+		it('Should have two method', function () {
+			expect(sub.two).toBeDefined();
+			expect(typeof sub.two).toBe('function');
+		});
+
+		it('Should have three method', function () {
+			expect(sub.three).toBeDefined();
+			expect(typeof sub.three).toBe('function');
+		});
+
+	    it('Should throw an error if callsThrough is attempted', function(){
+		    expect(function(){
+			    sub.callsThrough('one');
+		    }).toThrow(new Error('Cannot call through as substitute was not created from an object with a method of this name'));
+	    });
+	});
 });
