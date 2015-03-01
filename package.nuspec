@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+	<id>jsSubstitute</id>
+	<version>1.0.7</version>
+	<authors>Mike Hanson</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+       A framework for creating substitutes (mocks/fakes/stubs) for testing JavaScript objects. Inspired by NSubstitute.
+    </description>
+    <projectUrl>https://github.com/testpossessed/jsSubstitute</projectUrl>
+  </metadata>
+  <files>
+	<file src='jsSubstitute-bower\jsSubstitute.js' target='Scripts' />
+	<file src='jsSubstitute-bower\jsSubstitute.min.js' target='Scripts' />
+  </files>
+ </package>
