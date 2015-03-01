@@ -232,8 +232,8 @@ describe('jsSubstitute Substitute', function () {
             expect(typeof sub.returnsPromise).toBe('function');
         });
 
-        it('Should support specifying method name', function(){
-            expect(sub.returnsPromise.length).toBe(1);
+        it('Should support specifying method name and error throwing configuration', function(){
+            expect(sub.returnsPromise.length).toBe(2);
         });
 
         it('Should return a mock promise on method call', function(){

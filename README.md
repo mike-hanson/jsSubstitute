@@ -1,5 +1,5 @@
 ### jsSubstitute
-An expressive library for creating substitutes (mocks, fakes, stubs) for testing JavaScript objects inspired by [NSubstitute][http://nsubstitute.github.io] my preferred .NET mocking framework, that supports the Arrange, Act, Assert pattern of testing.
+An expressive library for creating substitutes (mocks, fakes, stubs) for testing JavaScript objects inspired by [NSubstitute](http://nsubstitute.github.io) my preferred .NET mocking framework, that supports the Arrange, Act, Assert pattern of testing.
 
 #### Installing
 
@@ -36,8 +36,7 @@ If you are using RequireJS you will declare a dependency something like this
 define(['jsSubstitute'], function(substitute){
 });
 ```
-
-Once you have the factory you create a substitute by passing a real instance of an object or an a representation of the 'interface' of the object or an array of strings representing the methods to the **for** method.  The 'interface' can be specified using an object literal that has all the fields and methods without implementation or an array of method names.  The latter is great if you only want to test behaviour interaction with the substitute, if you need to also test state i.e. fields values you will need to use an object literal or a stub.
+Once you have the factory you create a substitute by passing a real instance of an object or a representation of the 'interface' of the object the **for** method.  The 'interface' can be specified using an object literal that has all the fields and methods without implementation or an array of method names.  The latter is great if you only want to test behaviour interaction with the substitute, if you need to also test state i.e. fields values you will need to use an object literal or a stub.
 
 ```javascript
 // using an object literal as an interface
@@ -48,13 +47,13 @@ var mySub = substitute.for(iDoSomething);
 var names = ['doThis', 'doThat'];
 var mySub = substitute.for(names);
 ```
-Now you have your substitute your can continue the Arrange step of the test and pass it as a dependency to another object or function.  Something like this (details of the full set of options for configuring a substitute will follow)
+Now you have your substitute you can continue the Arrange step of the test and pass it as a dependency to another object or function.  Something like this (details of the full set of options for configuring a substitute will follow)
 
 ```javascript
 mySub.callsThrough('method1');
 var mySut = new MyObject(mySub);
 ```
-Once all is arranged you can Act by doing something with your system under test that interacts with the substitute.
+Once all is arranged you can Act by doing something with your system under test to trigger interaction with the substitute.
 
 ```javascript
 mySut.doSomething();
@@ -80,19 +79,19 @@ This can't be replicated with JavaScript (so far) but it influenced the creation
 The following methods are exposed by a substitute to arrange how they respond to interactions.
 
 **returns**
-This method allows you to arrange for the substitute to return a value or object regardless of the arguments passed to it like this:
+This method allows you to arrange for the substitute to return a value or object regardless of the arguments passed to it.
 ```javascript
 mySub.returns('method1', 1);
 mySub.returns('method2', {field: value});
 ```
 
 **returnsFor**
-This method allows you to arrange for the substitute to return a value or object when passed a specific set of argument values like this:
+This method allows you to arrange for the substitute to return a value or object when passed a specific set of argument values.
 ```javascript
 var returnMe = 2;
 mySub.resturnsFor('method1', returnMe, 1, 1);
 ```
-*NB: The return value is specified before the expected argument values.*
+*NB: The return value is specified before the expected argument values, all values following this are treated as inputs.
 
 **returnsPromise**
 This method allows you to arrange for the substitute to return a promise substitute, which is returned to you and can be resolved or rejected synchronously.  The promise substitute also provides methods for making assertions about interaction with it, more on this in the Assertions section below.
@@ -107,7 +106,7 @@ mySub.callsThrough('method1');
 ```
 
 #### Act
-The following method is exposed by a substitute as a helper during the Act phase of your tests.
+The following methods are exposed by a substitute as a helpers during the Act phase of your tests.
 
 **clearCalls**
 This method allows you to clear all calls to a specific method, this can be useful when a method may be called several times and you want to reset before a specific interaction that results in a call to the method.  This can help to make tests more readable.
@@ -123,7 +122,7 @@ mySub.invokeArgOfLastCallWith('method', 1, 1, 3);
 ```
 
 **invokeArgOfCallWith**
-This method behaves the same as the previous one except it allows you to specify the call and argument index.  This is useful where the same methods is called multiple times during a test, for example *on('event', ...)* methods 
+This method behaves the same as the previous one except it allows you to specify the call and argument index.  This is useful where the same method is called multiple times during a test, for example *on('event', ...)* methods 
 ```javascript
 mySub.method(1, function(a1, a2){
 	// do something here
@@ -136,14 +135,24 @@ mySub.invokeArgOfCallWith('method', 1, 1, 1, 3);
 ```
 
 #### Assert
-The following methods are exposed by a substitute to support interaction assertions.  All assertion methods return a boolean result.  However you can change this behaviour either globally or at the point of creating a substitute.
+The following methods are exposed by a substitute to support interaction assertions.  All assertion methods return a boolean result by default.  However you can change this behaviour either globally or at the point of creating a substitute such that assertions will throw an error on failure.
 
 ```javascript
-// global
+// enable throwing errors on assertion failure
+// globally
+substitute.throwErrors();
 substitute.throwErrors(true);
 
 // creation time
 var mySub = substitute.for(myInterface, true);
+
+
+// disable throwing errors on assertion failure
+// globally
+substitute.throwErrors(false);
+
+// creation time
+var mySub = substitute.for(myInterface, false);
 ```
 You can also query the global and instance setting
 ```javascript
@@ -159,7 +168,7 @@ mySub.received('method2', 2); // exactly two times
 ```
 
 **receivedWith**
-This method allows you to assert that a method of the substitute was called at least once with specific set of argument values or argument values that match a pattern or filter.  The factory exposes an *arg* object that in turn exposes some useful argument assertion methods, full details of this object will be provided in a separate section below.
+This method allows you to assert that a method of the substitute was called at least once with a specific set of argument values or argument values that match a pattern or filter.  The factory exposes an *arg* object that in turn exposes some useful argument assertion methods, full details of this object will be provided in a separate section below.
 
 ```javascript
 mySub.receivedWith('method1', 1);
@@ -186,7 +195,7 @@ mySub.receivedWith('method1', substitute.arg.any('function');
 ```
 
 **is**
-This method allows you to assert that an argument is of specified type and matches an expected value
+This method allows you to assert that an argument is of specified type and matches an expected value or
 
 ```javascript
 // is or was created using new with a construcor function i.e. instanceof
@@ -225,7 +234,19 @@ mySub.argsForCall('method1', 1); // arguments for the second call
 ```
 
 #### Promises, Promises, Promises
-There are two situations where you can get a promise with jsSubstitute.  The factory as a *forPromise* method and substitutes have a *returnsPromise* method.  Both return you  substitute for a promise that exposes the following methods:
+There are two situations where you can get a promise with jsSubstitute.  The factory has a *forPromise* method and substitutes have a *returnsPromise* method.  Both return you a substitute for a promise that exposes the following methods:
+
+```javascript
+// creating a promise substitute that throws errors on assertion failure
+var promise = substititute.forPromise(true);
+var promise = mySub.returnsPromise('method', true);
+
+// creating a promise substitute that does not throw errors on assertion failure
+var promise = substititute.forPromise();
+var promise = substititute.forPromise(false);
+var promise = mySub.returnsPromise('method');
+var promise = mySub.returnsPromise('method', false);
+```
 
 **then**
 Any code that expects to work with a promise will use this method to provide success and error handlers.  This method mirrors the signature of the expected method and tracks whether it was called or not.
@@ -242,7 +263,6 @@ This method allows you to trigger the rejection of a promise and pass data to ex
 var error = new Error("message");
 promise.error(error)
 ```
-
 **receivedThen**
 This method allows you to assert that the *then* method of the promise was called
 
@@ -252,8 +272,22 @@ This method allows you to assert that the *then* method of the promise was calle
 **recievedThenWithBothHandlers**
 This method allows you to assert that the *then* method of the promise was called with both a success and error handler
 
+**throwErrors**
+By default the promise returned will inherit error throwing configuration from the factory or substitute. This can be changed using this method.  As with the factory it accepts a parameter that specifies whether to throw errors on assertion failure.
 
-And that is all there is so far. Bear in mind I created this library for my own purposes, I use it all the time and prefer the readability of it to other test or mocking frameworks I have come across to date.  I use jasmine for all my unit and acceptance testing, but find the spy mechanism too wordy and awkward at times.  This library allows me to use the AAA pattern in much the same way as I use NSubstitute with NUnit in my C# code.  I will continue to develop and publish updates to jsSubstitute as I feel the need and welcome any suggestions.
+```javascript
+// both of these configure the promise to throw errors
+promise.throwErrors();
+promise.throwsErrors(true);
+
+// configure the promise not to throw errors
+promise.throwErrors(false)
+``` 
+
+**throwsErrors**
+This method allows you to query whether the promise substitute will throw errors on failed exceptions.
+
+And that is all there is so far. Bear in mind I created this library for my own purposes, I use it all the time and prefer the readability of it to other test or mocking frameworks I have come across to date.  I use jasmine for all my unit and acceptance testing, but find the spy mechanism too wordy and awkward at times.  This library allows me to use the AAA pattern in much the same way as I use NSubstitute with NUnit in my C# code.  I will continue to develop and publish updates to jsSubstitute as I feel the need and welcome any suggestions or feedback.
 
 
 

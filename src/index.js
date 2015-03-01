@@ -61,8 +61,13 @@
 		};
 	}
 
-	function PromiseSubstitute(){
-		var successHandler, errorHandler, thenCalled = false;
+	function PromiseSubstitute(throwErrors){
+		var successHandler, errorHandler, thenCalled = false, throwOnFailure = false;
+
+		if(throwErrors){
+			throwOnFailure = throwErrors;
+		}
+
 		this.then = function(success, error){
 			thenCalled = true;
 			successHandler = success;
@@ -78,21 +83,52 @@
 				errorHandler(error);
 			}
 		};
-		this.receivedThen = function(){
+		this.receivedThen = function () {
+			if(this.throwsErrors() && thenCalled === false){
+				throw new Error('then has not received expected call');
+			}
 			return thenCalled;
 		};
-		this.receivedThenWithOneHandler = function(){
-			return this.receivedThen() && this.hasSuccessHandler();
+		this.receivedThenWithOneHandler = function () {
+			var result = thenCalled && typeof successHandler === 'function';
+			if (this.throwsErrors() && result === false) {
+				throw new Error('then has not been called with expected success handler');
+			}
+			return result;
 		};
-		this.receivedThenWithBothHandlers = function(){
-			return this.receivedThen() && this.hasSuccessHandler() && this.hasErrorHandler();
+		this.receivedThenWithBothHandlers = function () {
+			var result = thenCalled &&
+				typeof successHandler === 'function' &&
+				typeof errorHandler === 'function';
+			if (this.throwsErrors() && result === false) {
+				throw new Error('then has not been called with expected success and error handlers');
+			}
+			return result;
 		};
 		this.hasSuccessHandler = function(){
-			return successHandler && typeof successHandler === 'function';
+			var result = typeof successHandler === 'function';
+			if (this.throwsErrors() && result === false) {
+				throw new Error('Promise does not have expected success handler');
+			}
+			return result;
 		};
 		this.hasErrorHandler = function(){
-			return errorHandler && typeof errorHandler === 'function';
+			var result = typeof errorHandler === 'function';
+			if (this.throwsErrors() && result === false) {
+				throw new Error('Promise does not have expected error handler');
+			}
+			return result;
 		};
+		this.throwErrors = function (throwErrors) {
+			if(throwErrors  === undefined){
+				throwErrors = true;
+			}
+			throwOnFailure = throwErrors;
+		};
+		this.throwsErrors = function(){
+			return throwOnFailure;
+		};
+
 	}
 
 	function MethodState(methodName, type){
@@ -273,9 +309,13 @@
 			var state = states.get(methodName);
 			state.addReturn(returnValue, arguments);
 		};
-		this.returnsPromise = function(methodName){
+		this.returnsPromise = function (methodName, throwErrors) {
+			if(!throwErrors){
+				throwErrors = this.throwsErrors();
+			}
+
 			var state = states.get(methodName);
-			var promiseSubstitute = new PromiseSubstitute();
+			var promiseSubstitute = new PromiseSubstitute(throwErrors);
 			state.addReturn(promiseSubstitute);
 			return promiseSubstitute;
 		};
@@ -397,8 +437,11 @@
 
 			return new Substitute(target, throwErrors);
 		};
-		this.forPromise = function(){
-			return new PromiseSubstitute();
+		this.forPromise = function (throwErrors) {
+			if(!throwErrors){
+				throwErrors = throwOnFailure;
+			}
+			return new PromiseSubstitute(throwErrors);
 		};
 		this.throwErrors = function(throwErrors){
 			if(throwErrors === undefined){
