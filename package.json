@@ -1,10 +1,14 @@
 {
-  "name": "jsSubstituteBuild",
-  "version": "1.0.0",
-  "description": "Build and test jsSubstitute for distribution via npm, bower and nuget",
-  "main": "index.js",
-  "author": "Mike Hanson <mike@testpossessed.com> (http://testpossessed.com/)",
-  "license": "MIT",
+    "name": "jsSubstituteBuild",
+    "version": "1.0.0",
+    "description": "Build and test jsSubstitute for distribution via npm, bower and nuget",
+    "main": "index.js",
+    "author": "Mike Hanson <mike@testpossessed.com> (http://testpossessed.com/)",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/testpossessed/jssubtitute"
+    },
   "devDependencies": {
     "config": "^1.12.0",
     "grunt": "^0.4.5",

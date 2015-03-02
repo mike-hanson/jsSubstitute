@@ -429,13 +429,28 @@ describe('jsSubstitute Substitute', function () {
             expect(sub.invokeArgOfCallWith.length).toBe(3);
         });
 
-        it('Should call valid function argument', function(){
+        it('Should call argument of first call when requested after multiple calls', function(){
             var calledBy;
             sub.method(1, function(){
                 calledBy = 1;
             });
             sub.method(2, function(){
                 calledBy = 2;
+            });
+            sub.invokeArgOfCallWith('method', 0, 1);
+            expect(calledBy).toBe(1);
+        });
+
+        it('Should call argument of second call when requested after multiple calls', function(){
+            var calledBy;
+            sub.method(1, function(){
+                calledBy = 1;
+            });
+            sub.method(2, function(){
+                calledBy = 2;
+            });;
+            sub.method(3, function(){
+                calledBy = 3;
             });
             sub.invokeArgOfCallWith('method', 1, 1);
             expect(calledBy).toBe(2);

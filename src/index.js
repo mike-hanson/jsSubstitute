@@ -157,7 +157,7 @@
 			return calls.length;
 		};
 		this.getArgs = function(index){
-			if(!index){
+			if(index === undefined){
 				index = calls.length - 1;
 			}
 			return calls[index];
