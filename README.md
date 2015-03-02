@@ -16,6 +16,7 @@ bower install jsSubstitute --save-dev
 ```
 
 Install with NuGet
+
 To install with NuGet search for jsSubstitute or use Package Manager Console to execute
 ```
 Install-Package jsSubstitute
