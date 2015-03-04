@@ -162,7 +162,7 @@ describe('jsSubstitute Substitute', function () {
 
     describe('Returns on call with args', function(){
 
-        it('Should define returns method', function(){
+        it('Should define returns for method', function(){
             expect(sub.returnsFor).toBeDefined();
             expect(typeof sub.returnsFor).toBe('function');
         });
@@ -197,6 +197,12 @@ describe('jsSubstitute Substitute', function () {
             sub.returnsFor('method', 'string', 5);
             sub.returnsFor('method', 'string2', 5);
             expect(sub.method(5)).toBe('string2');
+        });
+
+        it('Should return last value specified when arg contains dots', function () {
+        	sub.returnsFor('method', 'string', 'key.one');
+        	sub.returnsFor('method', 'string2', 'key.two');
+        	expect(sub.method(5)).toBe('string2');
         });
     });
 
@@ -365,7 +371,6 @@ describe('jsSubstitute Substitute', function () {
         it('Should report call with object argument correctly', function(){
             sub.method2(1, {field1: 1, field2: 'string'});
             var report = sub.getActualCallsString('method2');
-            console.log(report);
             expect(report.toString().indexOf('\n    1: method2 (1, [object Object]);')).toBeGreaterThan(-1);
         });
     });
