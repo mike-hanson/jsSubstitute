@@ -325,6 +325,13 @@
             state.addReturn(promiseSubstitute);
             return promiseSubstitute;
         };
+        this.returnsPromiseFor          = function(methodName) {
+            var state             = states.get(methodName);
+            var actualArgs = argumentsSubset(arguments, 2);
+            var promiseSubstitute = new PromiseSubstitute(this.throwsErrors());
+            state.addReturn(promiseSubstitute, actualArgs);
+            return promiseSubstitute;
+        };
         this.callsThrough            = function(methodName) {
             var state = states.get(methodName);
             if(!state.canCallThrough()) {

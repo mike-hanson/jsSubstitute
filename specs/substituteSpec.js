@@ -250,6 +250,24 @@ describe('jsSubstitute Substitute', function () {
         });
     });
 
+    describe('Returns promise on method call with args', function(){
+        it('Should define returnsPromiseFor method', function(){
+            expect(sub.returnsPromiseFor).toBeDefined();
+            expect(typeof sub.returnsPromiseFor).toBe('function');
+        });
+
+        it('Should support specifying method name', function(){
+            expect(sub.returnsPromiseFor.length).toBe(1);
+        });
+
+        it('Should return a mock promise on method call with args', function(){
+            sub.returnsPromiseFor('method', 'args');
+
+            // NB: this will fail if tests are run in IE<10
+            expect(sub.method().constructor.name).toBe('PromiseSubstitute');
+        });
+    });
+
     describe('Argument retrieval', function(){
         it('Should define method to retrieve arguments for a call', function(){
             expect(sub.argsForCall).toBeDefined();
