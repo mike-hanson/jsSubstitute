@@ -266,6 +266,20 @@ describe('jsSubstitute Substitute', function () {
             // NB: this will fail if tests are run in IE<10
             expect(sub.method().constructor.name).toBe('PromiseSubstitute');
         });
+
+        it('Should create new promises for each set of arguments', function() {
+            var promise1 = sub.returnsPromiseFor('method', 'arg1', 'arg2');
+            var promise2 = sub.returnsPromiseFor('method', 'arg3', 4);
+            expect(promise1).not.toBe(promise2);
+        });
+
+        it('Should return different for each set of arguments', function() {
+            sub.returnsPromiseFor('method', 'arg1', 'arg2');
+            sub.returnsPromiseFor('method', 'arg3', 4);
+            var promise1 = sub.method('arg1', 'arg2');
+            var promise2 = sub.method('arg3', 4);
+            expect(promise1).not.toBe(promise2);
+        });
     });
 
     describe('Argument retrieval', function(){

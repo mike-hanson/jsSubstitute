@@ -327,7 +327,7 @@
         };
         this.returnsPromiseFor          = function(methodName) {
             var state             = states.get(methodName);
-            var actualArgs = argumentsSubset(arguments, 2);
+            var actualArgs = argumentsSubset(arguments, 1);
             var promiseSubstitute = new PromiseSubstitute(this.throwsErrors());
             state.addReturn(promiseSubstitute, actualArgs);
             return promiseSubstitute;
