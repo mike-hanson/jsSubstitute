@@ -1,38 +1,33 @@
 {
-    "name": "jsSubstituteBuild",
-    "version": "1.0.0",
-    "description": "Build and test jsSubstitute for distribution via npm, bower and nuget",
-    "main": "index.js",
-    "author": "Mike Hanson <mike@testpossessed.com> (http://testpossessed.com/)",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/testpossessed/jssubtitute"
-    },
+  "name": "jsSubstituteBuild",
+  "version": "1.0.0",
+  "description": "Build and test jsSubstitute for distribution via npm, bower and nuget",
+  "main": "index.js",
+  "author": "Mike Hanson <mike@testpossessed.com> (http://testpossessed.com/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/testpossessed/jssubtitute"
+  },
   "devDependencies": {
-    "config": "^1.12.0",
     "grunt": "^0.4.5",
     "grunt-bumpup": "^0.6.2",
     "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-copy": "^0.7.0",
-    "grunt-contrib-cssmin": "^0.11.0",
-    "grunt-contrib-less": "^1.0.0",
     "grunt-contrib-uglify": "^0.7.0",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-git": "^0.3.4",
-    "grunt-jasmine-node": "^0.2.1",
+    "grunt-jasmine-nodejs": "^1.4.0",
     "grunt-karma": "^0.10.1",
     "grunt-nuget": "^0.1.4",
     "jasmine-core": "^2.2.0",
     "jasmine-node": "^1.14.5",
+    "jasmine-reporters": "^2.0.4",
     "karma": "^0.12.31",
     "karma-coverage": "^0.2.7",
     "karma-jasmine": "^0.3.5",
     "karma-junit-reporter": "^0.2.2",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-story-reporter": "^0.3.1",
-    "matchdep": "^0.3.0",
-    "mockery": "^1.4.0",
-    "poplib": "^0.1.7"
+    "matchdep": "^0.3.0"
   }
 }

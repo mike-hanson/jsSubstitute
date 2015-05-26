@@ -21,7 +21,7 @@ module.exports = function (grunt) {
 		clean: {
 			nuget: './*.nupkg'
 		},
-		jasmine_node: {
+		jasmine_nodejs: {
 			options: {
 				forceExit: false
 			},
@@ -29,7 +29,7 @@ module.exports = function (grunt) {
 		},
 		uglify: {
 			options: {
-				compress: true,
+				compress: {},
 				mangle: true,
 				beautify: false
 			},
@@ -77,7 +77,7 @@ module.exports = function (grunt) {
 					'specs/**/*.js',
 					'src/index.js'
 				],
-				tasks: ['karma:browser:run', 'jasmine_node', 'uglify', 'copy']
+				tasks: ['karma:browser:run', 'jasmine_nodejs', 'uglify', 'copy']
 			},
 			grunt: {
 				files: ['gruntfile.js']
@@ -85,7 +85,7 @@ module.exports = function (grunt) {
 		}
 	});
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
-	grunt.registerTask('default', ['karma', 'jasmine_node', 'uglify', 'copy', 'watch']);
-	grunt.registerTask('test', ['karma', 'jasmine_node']);
+	grunt.registerTask('default', ['karma', 'jasmine_nodejs', 'uglify', 'copy', 'watch']);
+	grunt.registerTask('test', ['karma', 'jasmine_nodejs']);
 	grunt.registerTask('nuget', ['clean:nuget', 'nugetpack', 'nugetpush']);
 };
