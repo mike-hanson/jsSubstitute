@@ -85,7 +85,7 @@ describe('jsSubstitute Substitute', function () {
             expect(sub.received('method', 2)).toBe(false);
         });
 
-        it('Shold throw an error if method not being tracked', function(){
+        it('Should throw an error if method not being tracked', function(){
             expect(function(){
                 sub.received('badMethod');
             }).toThrow(new Error('badMethod is not being tracked by this substitute, check it exists at the time the substitute was created'));
@@ -112,11 +112,13 @@ describe('jsSubstitute Substitute', function () {
             sub.method(1, 2);
             expect(sub.receivedWith('method', 1, 2)).toBe(true);
         });
-        it('Should report method was called at least once with specified arguments using a comparer function', function(){
-            sub.method(1, 2);
-            expect(sub.receivedWith('method', 1, function(arg){
-                return arg === 2;
-            })).toBe(true);
+
+        it('Should no longer execute functions passed directly as an argument', function() {
+            var wasNotExecuted = true;
+            sub.receivedWith('method', 1, function(a){
+                wasNotExecuted = false;
+                return a === 2});
+            expect(wasNotExecuted).toBe(true);
         });
     });
 

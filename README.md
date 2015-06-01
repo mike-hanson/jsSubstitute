@@ -1,6 +1,22 @@
 ### jsSubstitute
 An expressive library for creating substitutes (mocks, fakes, stubs) for testing JavaScript objects inspired by [NSubstitute](http://nsubstitute.github.io) my preferred .NET mocking framework, that supports the Arrange, Act, Assert pattern of testing.
 
+### v2.0.0 - Breaking Change
+Following the changes to support substitutes for functions I encountered some conflicts that I could not resolve after updating some of my test suites.  So I have made a breaking change to avoid the conflicts, hence bumping the major version of this library.
+
+Once you upgrade to v2.* any tests that pass a custom matcher function to **recievedWith** you will fail and probably break because this is no longer supported.  Instead you must use the **matchUsing** factory method of **substitute.arg**.
+
+```javascript
+var arg = substitute.arg;
+// this
+mySub.receivedWith(1, 2, function(arg){return arg === 3;});
+
+// must become
+mySub.receivedWith(1, 2, arg.matchUsing(function(arg){return arg === 3;}));
+```
+
+Internally the new factory method adds a flag to indicate the function is a matcher and this flag is later used during argument matching to determine whether a function argument should be executed or simply compared.
+
 #### Installing
 
 jsSubstitute is designed to work in browsers with or without RequireJS or with Node.js.  It hasn't been fully tested with RequireJS as I don't use it myself, but I hope to do more testing with it at some point.
@@ -51,6 +67,7 @@ var mySub = substitute.for(iDoSomething);
 var names = ['doThis', 'doThat'];
 var mySub = substitute.for(names);
 ```
+ 
 Now you have your substitute you can continue the Arrange step of the test and pass it as a dependency to another object or function.  Something like this (details of the full set of options for configuring a substitute will follow)
 
 ```javascript
@@ -172,7 +189,7 @@ mySub.received('method2', 2); // exactly two times
 ```
 
 **receivedWith**
-This method allows you to assert that a method of the substitute was called at least once with a specific set of argument values or argument values that match a pattern or filter.  The factory exposes an *arg* object that in turn exposes some useful argument assertion methods, full details of this object will be provided in a separate section below.
+This method allows you to assert that a method of the substitute was called at least once with a specific set of argument values or argument values that match a predicate.  The factory exposes an *arg* object that in turn exposes some useful argument assertion methods/predicates, full details of this object are provided in a separate section below.
 
 ```javascript
 mySub.receivedWith('method1', 1);
@@ -199,7 +216,7 @@ mySub.receivedWith('method1', substitute.arg.any('function');
 ```
 
 **is**
-This method allows you to assert that an argument is of specified type and matches an expected value or
+This method allows you to assert that an argument is of specified type and matches an expected value or predicate.
 
 ```javascript
 // is or was created using new with a construcor function i.e. instanceof
@@ -224,12 +241,14 @@ This method allows you to assert that an argument has a property (field) and tha
 mySub.receivedWith('method1', substitute.arg.hasProperty('field1', 1));
 ```
 
-Additionally you pass a predicate function to *receivedWith" to validate an argument.  The predicate will be passed the value of the argument at that position and must return a boolean indicating a match.
+**matchUsing**
+This method allows you test an argument using a predicate function, which must accept a single argument and return a boolean result after comparing the argument.
 ```javascript
-mySub.receivedWith('method1', function(arg){ return arg === 1;});
+mySub.receivedWith(1, 2, substitute.arg.matchUsing(function(a){return a === 3;}));
 ```
 
-If none of the above methods allow you assert what you need then you can always resort to getting actual argument values and making assertions against them using your assertion framework.  The factory exposes a method for this purpose
+If none of the above methods support your required assertion then you can always resort to getting actual argument values and making assertions against them using your assertion framework.  The factory exposes a method for this purpose
+
 **argsForCall**
 This method allows you to retrieve an array of argument values for the last call or a specific call by index.  The argument values are in positional order as they were passed to the method
 ```javascript
@@ -293,8 +312,55 @@ This method allows you to query whether the promise substitute will throw errors
 
 And that is all there is so far. Bear in mind I created this library for my own purposes, I use it all the time and prefer the readability of it to other test or mocking frameworks I have come across to date.  I use jasmine for all my unit and acceptance testing, but find the spy mechanism too wordy and awkward at times.  This library allows me to use the AAA pattern in much the same way as I use NSubstitute with NUnit in my C# code.  I will continue to develop and publish updates to jsSubstitute as I feel the need and welcome any suggestions or feedback.
 
+##### Function Substitutes - From v1.0.14
+Support for function substitutes was working from version 1.0.14.  This was added to support creating subsitutes that tracked calls to a function as well as objects and interfaces that were already supported.  This made it possible to use jsSubstitute for testing Angular Services like $timeout or Node Modules that exported a function rather than an object with members.
 
+#### Arrange
 
+First you need your substitute
+
+**forFunction**
+```javascript
+var myFnSub = substitute.forFunction(function(arg1, arg2){//...})
+```
+
+**returns**
+Just as with an object substitute you can configure a return value without regard for arguments, which skips the call through to the target function.
+
+```javascript
+myFnSub.returns(4);
+```
+
+**returnsFor**
+This method allows you to configure a return value for a specific set of argument values, it also skips the call through to the target function.
+
+```javascript
+var returnMe = 4;
+myFnSub.returnsFor(returnMe, 1, 3);
+```
+
+#### Act
+
+You can now execute the substitute, or more accurately your production code can, then make assertions about the calls.
+
+```javascript
+myFnSub(1, 3);
+```
+
+**wasInvoked**
+This assertion ignores any arguments simply indicates if the function was invoked 1 or specific number of times.
+
+```javascript
+myFnSub.wasInvoked();
+myFnSub.wasInvoked(2); // fails if not invoked exactly twice
+```
+
+**wasInvokedWith**
+The method allows you to assert the function was invoked at least once with a specific set of argument values.  It supports all of the same argument matching options as the object substitute.  I won't repeat them here.
+```javascript
+myFnSub.wasInvokedWith(1, 2);
+myFnSub.wasInvokedWith('string', substitute.arg.any(Function));
+```
 
  
 

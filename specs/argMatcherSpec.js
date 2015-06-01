@@ -75,7 +75,7 @@ describe('Arg', function() {
             expect(arg.is(Object, expected)(expected)).toBeTruthy();
         });
 
-        it('Should pass valid arrray assertion', function() {
+        it('Should pass valid array assertion', function() {
             var expected = [];
             expect(arg.is(Array, expected)(expected)).toBeTruthy();
         });
@@ -121,22 +121,54 @@ describe('Arg', function() {
 
         it('Should pass valid assertions', function() {
             var now = new Date();
-            expect(arg.hasState({number: 1, string: 'string'})({number: 1, string: 'string'})).toBeTruthy();
-            expect(arg.hasState({number: 1, string: 'string', date: now})({
+            expect(function(){return arg.hasState({number: 1, string: 'string'})({number: 1, string: 'string'})}).toBeTruthy();
+            expect(function(){arg.hasState({number: 1, string: 'string', date: now})({
                 number: 1,
                 string: 'string',
                 date: now
-            })).toBeTruthy();
-            expect(arg.hasState({number: 1, string: 'string', array: ['one', 'two', 'three']})({
+            })}).toBeTruthy();
+            expect(function(){arg.hasState({number: 1, string: 'string', array: ['one', 'two', 'three']})({
                 number: 1,
                 string: 'string',
                 array: ['one', 'two', 'three']
-            })).toBeTruthy();
-            expect(arg.hasState({
+            })}).toBeTruthy();
+            expect(function(){arg.hasState({
                 number: 1,
                 string: 'string',
                 obj: {one: 'one', two: 'two', three: 'three'}
-            })({number: 1, string: 'string', obj: {one: 'one', two: 'two', three: 'three'}})).toBeTruthy();
+            })({number: 1, string: 'string', obj: {one: 'one', two: 'two', three: 'three'}})}).toBeTruthy();
+        });
+    });
+
+    describe('matchUsing - match using a custom function', function(){
+        it('Should define a method to match arguments using a function', function() {
+            expect(arg.matchUsing).toBeDefined();
+            expect(typeof arg.matchUsing).toBe('function');
+        });
+
+        it('Should throw an error if the argument is not a function', function() {
+            expect(function(){ arg.matchUsing({})}).toThrowError('matchUsing requires a function that accepts a single argument.')
+        });
+
+        it('Should throw an error if the custom function does not expect a single argument', function() {
+            expect(function(){ arg.matchUsing(function(){})}).toThrowError('matchUsing requires a function that accepts a single argument.')
+        });
+
+        it('Should throw an error if the custom function does not return a boolean result', function() {
+            expect(function(){ arg.matchUsing(function(a){})}).toThrowError('matchUsing requires a function that' +
+                                                                            ' returns a boolean result.')
+        });
+
+        it('Should add a flag to the function indicating it is a matcher', function() {
+            var fn = function(arg){return arg !== undefined};
+            arg.matchUsing(fn);
+            expect(fn.isMatcher).toBeDefined();
+
+        });
+
+        it('Should return original function', function() {
+            var fn = function(arg){return arg !== undefined};
+            expect(arg.matchUsing(fn)).toBe(fn);
         });
     });
 

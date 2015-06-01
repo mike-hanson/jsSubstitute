@@ -2,6 +2,65 @@
     'use strict';
 
     function Arg() {
+        var self = this;
+        this.any         = function(type) {
+            return self.matchUsing(function(arg) {
+                if(typeof type === 'string') {
+                    return typeof arg === type;
+                }
+                else {
+                    return arg instanceof type;
+                }
+            });
+        };
+        this.is          = function(type, expected) {
+            return self.matchUsing(function(arg) {
+                var isTypeMatch  = self.any(type)(arg);
+                var isValueMatch = false;
+                if(isTypeMatch) {
+                    if(typeof expected === 'function' && typeof type !== 'function' && type !== 'function') {
+                        isValueMatch = expected(arg);
+                    }
+                    else {
+                        isValueMatch = arg === expected;
+                    }
+                }
+                return isTypeMatch && isValueMatch;
+            });
+        };
+        this.hasState    = function(source) {
+            return self.matchUsing(function(arg) {
+                for(var member in source) {
+                    if(source.hasOwnProperty(member) && typeof source[member] !== 'function') {
+                        if(!arg.hasOwnProperty(member) || !areEqual(source[member], arg[member])) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            });
+        };
+        this.hasProperty = function(name, value) {
+            return self.matchUsing(function(arg) {
+                return typeof arg === 'object' && arg[name] !== undefined && arg[name] === value;
+            });
+        };
+        this.matchUsing = function(fn)
+        {
+            if(typeof fn !== 'function' || fn.length !== 1)
+            {
+                throw new Error('matchUsing requires a function that accepts a single argument.');
+            }
+            var testResult = fn(undefined);
+            if(typeof testResult !== 'boolean')
+            {
+                throw new Error('matchUsing requires a function that returns a boolean result.');
+            }
+
+            fn.isMatcher = true;
+
+            return fn;
+        }
         function areEqual(source, target) {
             var sourceType = typeof source, targetType = typeof target;
 
@@ -20,50 +79,6 @@
             else {
                 return source === target;
             }
-        };
-
-        this.any         = function(type) {
-            return function(arg) {
-                if(typeof type === 'string') {
-                    return typeof arg === type;
-                }
-                else {
-                    return arg instanceof type;
-                }
-            };
-        };
-        this.is          = function(type, expected) {
-            var self = this;
-            return function(arg) {
-                var isTypeMatch  = self.any(type)(arg);
-                var isValueMatch = false;
-                if(isTypeMatch) {
-                    if(typeof expected === 'function' && typeof type !== 'function' && type !== 'function') {
-                        isValueMatch = expected(arg);
-                    }
-                    else {
-                        isValueMatch = arg === expected;
-                    }
-                }
-                return isTypeMatch && isValueMatch;
-            };
-        };
-        this.hasState    = function(source) {
-            return function(arg) {
-                for(var member in source) {
-                    if(source.hasOwnProperty(member) && typeof source[member] !== 'function') {
-                        if(!arg.hasOwnProperty(member) || !areEqual(source[member], arg[member])) {
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            };
-        };
-        this.hasProperty = function(name, value) {
-            return function(arg) {
-                return typeof arg === 'object' && arg[name] !== undefined && arg[name] === value;
-            };
         };
     }
 
@@ -574,13 +589,13 @@
             return false;
         }
 
-        if(source.length && target.length && source.length == target.length) {
+        if(source.length) {
             for(var i = 0; i < source.length; i++) {
                 var sourceArg = source[i];
                 var targetArg = target[i];
 
                 var isMatch = false;
-                if(typeof targetArg === 'function' && typeof sourceArg !== 'function') {
+                if(typeof targetArg === 'function' && targetArg.isMatcher) {
                     isMatch = targetArg(sourceArg);
                 }
                 else {
