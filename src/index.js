@@ -431,7 +431,8 @@
             }
 
             var result = function() {
-                calls.push(arguments);
+                var actualArgs = argumentsSubset(arguments, 0);
+                calls.push(actualArgs);
 
                 if(absReturnValue)
                 {
@@ -440,16 +441,17 @@
 
                 if(returns.length)
                 {
+                    var args =  argumentsSubset(arguments, 0);
                     for(var i = 0; i < returns.length; i++) {
                         var obj = returns[i];
-                        if(argsMatch(obj.args, arguments))
+                        if(argsMatch(obj.args, args))
                         {
                             return obj.returns;
                         }
                     }
                 }
 
-                return fn.apply(arguments);
+                return fn.apply(actualArgs);
             };
 
             result.wasInvoked = function(expectedCalls) {
@@ -465,7 +467,8 @@
             }
 
             result.wasInvokedWith = function() {
-                var wasInvoked = hasCallWithArgs(arguments)
+                var args = argumentsSubset(arguments, 0)
+                var wasInvoked = hasCallWithArgs(args)
                 if(!wasInvoked && throwErrors) {
                     throw new Error(name + ' was not invoked with the expected arguments.\n' +
                                     getCallsString(calls, name));
@@ -475,13 +478,14 @@
             }
 
             result.wasNotInvokedWith = function() {
-                var wasInvoked = hasCallWithArgs(arguments)
+                var args = argumentsSubset(arguments, 0)
+                var wasInvoked = hasCallWithArgs(args)
                 if(wasInvoked && throwErrors) {
                     throw new Error(name + ' received an unexpected a call with the specified arguments.\n' +
                                     getCallsString(calls, name));
                 }
-
-                return !wasInvoked;
+                console.log(wasInvoked);
+                return wasInvoked === false;
             }
 
             result.returns = function(returnValue)
@@ -497,6 +501,11 @@
 
             function hasCallWithArgs(args)
             {
+                if(!calls.length)
+                {
+                    return false;
+                }
+
                 for(var i = 0; i < calls.length; i++) {
                     if(argsMatch(calls[i], args)) {
                         return true;
@@ -557,6 +566,9 @@
     }
 
     function argsMatch(source, target) {
+
+        console.log(source);
+        console.log(target);
         if(!source) {
             return false;
         }
@@ -565,19 +577,22 @@
             return false;
         }
 
-        for(var i = 0; i < source.length; i++) {
-            var sourceArg = source[i];
-            var targetArg = target[i];
-            var isMatch   = false;
-            if(typeof targetArg === 'function') {
-                isMatch = targetArg(sourceArg);
-            }
-            else {
-                isMatch = targetArg === sourceArg;
-            }
+        if(source.length && target.length && source.length == target.length) {
+            for(var i = 0; i < source.length; i++) {
+                var sourceArg = source[i];
+                var targetArg = target[i];
 
-            if(!isMatch) {
-                return false;
+                var isMatch = false;
+                if(typeof targetArg === 'function' && typeof sourceArg !== 'function') {
+                    isMatch = targetArg(sourceArg);
+                }
+                else {
+                    isMatch = targetArg === sourceArg;
+                }
+
+                if(!isMatch) {
+                    return false;
+                }
             }
         }
 

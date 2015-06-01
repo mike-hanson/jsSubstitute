@@ -125,7 +125,7 @@ describe('jsSubstitute Function Substitute', function(){
         sub = substitute.forFunction(function(){
             return 5;
         });
-        sub.returnsFor(1, 3)
+        sub.returnsFor(99, 1, 3)
         expect(sub(2, 3)).toBe(5);
     });
 })
