@@ -273,7 +273,7 @@ describe('jsSubstitute Substitute', function () {
             expect(promise1).not.toBe(promise2);
         });
 
-        it('Should return different for each set of arguments', function() {
+        it('Should return different promise for each set of arguments', function() {
             sub.returnsPromiseFor('method', 'arg1', 'arg2');
             sub.returnsPromiseFor('method', 'arg3', 4);
             var promise1 = sub.method('arg1', 'arg2');

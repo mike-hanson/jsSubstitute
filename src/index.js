@@ -24,28 +24,24 @@
 
         this.any         = function(type) {
             return function(arg) {
-				if(typeof type === 'string') {
-					return typeof arg === type;
-				}
-				else {
-					return arg instanceof type;
-				}
+                if(typeof type === 'string') {
+                    return typeof arg === type;
+                }
+                else {
+                    return arg instanceof type;
+                }
             };
         };
         this.is          = function(type, expected) {
             var self = this;
             return function(arg) {
-                var isTypeMatch =  self.any(type)(arg);
+                var isTypeMatch  = self.any(type)(arg);
                 var isValueMatch = false;
-                if(isTypeMatch)
-                {
-                    console.log(typeof type);
-                    if(typeof expected === 'function' && typeof type !== 'function'  && type !== 'function')
-                    {
+                if(isTypeMatch) {
+                    if(typeof expected === 'function' && typeof type !== 'function' && type !== 'function') {
                         isValueMatch = expected(arg);
                     }
-                    else
-                    {
+                    else {
                         isValueMatch = arg === expected;
                     }
                 }
@@ -165,34 +161,6 @@
             return calls[index];
         };
 
-        function argsMatch(source, target) {
-            if(!source) {
-                return false;
-            }
-
-            if(!target) {
-                return false;
-            }
-
-            for(var i = 0; i < source.length; i++) {
-                var sourceArg = source[i];
-                var targetArg = target[i];
-                var isMatch   = false;
-                if(typeof targetArg === 'function') {
-                    isMatch = targetArg(sourceArg);
-                }
-                else {
-                    isMatch = targetArg === sourceArg;
-                }
-
-                if(!isMatch) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
         this.hasCallWithArgs      = function(args) {
             for(var i = 0; i < calls.length; i++) {
                 if(argsMatch(calls[i], args)) {
@@ -202,7 +170,10 @@
             return false;
         };
         this.addReturn            = function(returnValue, args) {
-            returns.push({returnValue: returnValue, args: args});
+            returns.push({
+                returnValue: returnValue,
+                args:        args
+            });
         };
         this.getReturnForArgs     = function(args) {
             if(returns.length === 0) {
@@ -226,24 +197,7 @@
             return callsThrough;
         };
         this.getActualCallsString = function() {
-            var result = '';
-
-            if(calls.length === 0) {
-                result = 'No actual calls were received';
-            }
-            else {
-                result = 'Actual call/s :';
-                for(var i = 0; i < calls.length; i++) {
-                    result += '\n    ' + (i + 1) + ': ' + this.name + ' (';
-                    if(calls[i].length) {
-                        result += calls[i].join(', ');
-                    }
-
-                    result += ');';
-                }
-            }
-
-            return result;
+            return getCallsString(calls, this.name);
         };
     }
 
@@ -325,9 +279,9 @@
             state.addReturn(promiseSubstitute);
             return promiseSubstitute;
         };
-        this.returnsPromiseFor          = function(methodName) {
+        this.returnsPromiseFor       = function(methodName) {
             var state             = states.get(methodName);
-            var actualArgs = argumentsSubset(arguments, 1);
+            var actualArgs        = argumentsSubset(arguments, 1);
             var promiseSubstitute = new PromiseSubstitute(this.throwsErrors());
             state.addReturn(promiseSubstitute, actualArgs);
             return promiseSubstitute;
@@ -446,8 +400,9 @@
                 throwErrors = throwOnFailure;
             }
             var targetType = typeof target;
-            if(isArrayOfNonStrings(target) || (targetType !== 'function' && targetType !== 'object')) {
-                throw new Error('jsSubstitute can only create substitutes for objects, functions or an array of method names');
+            if(isArrayOfNonStrings(target) || targetType !== 'object') {
+                throw new Error('jsSubstitute.for can only create substitutes for objects or an array of method' +
+                                ' names. To test a function try jsSubstitute.forFunction.');
             }
 
             return new Substitute(target, throwErrors);
@@ -467,7 +422,92 @@
         this.throwsErrors  = function() {
             return throwOnFailure;
         };
-        this.arg           = new Arg();
+
+        this.forFunction = function(fn, throwErrors) {
+            var calls = [], name = functionName(fn), absReturnValue, returns = [];
+
+            if(!throwErrors) {
+                throwErrors = throwOnFailure;
+            }
+
+            var result = function() {
+                calls.push(arguments);
+
+                if(absReturnValue)
+                {
+                    return absReturnValue;
+                }
+
+                if(returns.length)
+                {
+                    for(var i = 0; i < returns.length; i++) {
+                        var obj = returns[i];
+                        if(argsMatch(obj.args, arguments))
+                        {
+                            return obj.returns;
+                        }
+                    }
+                }
+
+                return fn.apply(arguments);
+            };
+
+            result.wasInvoked = function(expectedCalls) {
+                if(!expectedCalls) {
+                    expectedCalls = 1;
+                }
+                var wasCalled = calls.length === expectedCalls;
+
+                if(!wasCalled && throwErrors) {
+                    throw new Error(name + ' was not invoked ' + expectedCalls + ' times as expected');
+                }
+                return wasCalled;
+            }
+
+            result.wasInvokedWith = function() {
+                var wasInvoked = hasCallWithArgs(arguments)
+                if(!wasInvoked && throwErrors) {
+                    throw new Error(name + ' was not invoked with the expected arguments.\n' +
+                                    getCallsString(calls, name));
+                }
+
+                return wasInvoked;
+            }
+
+            result.wasNotInvokedWith = function() {
+                var wasInvoked = hasCallWithArgs(arguments)
+                if(wasInvoked && throwErrors) {
+                    throw new Error(name + ' received an unexpected a call with the specified arguments.\n' +
+                                    getCallsString(calls, name));
+                }
+
+                return !wasInvoked;
+            }
+
+            result.returns = function(returnValue)
+            {
+                absReturnValue = returnValue;
+            }
+
+            result.returnsFor = function(returnValue)
+            {
+                var actualArgs = argumentsSubset(arguments, 1);
+                returns.push({args: actualArgs, returns: returnValue});
+            }
+
+            function hasCallWithArgs(args)
+            {
+                for(var i = 0; i < calls.length; i++) {
+                    if(argsMatch(calls[i], args)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return result;
+        }
+
+        this.arg = new Arg();
 
         function isArrayOfNonStrings(target) {
             if(!(target instanceof Array)) {
@@ -493,6 +533,62 @@
         }
 
         return result;
+    }
+
+    function getCallsString(calls, name) {
+        var result = '';
+
+        if(calls.length === 0) {
+            result = 'No actual calls were received';
+        }
+        else {
+            result = 'Actual call/s :';
+            for(var i = 0; i < calls.length; i++) {
+                result += '\n    ' + (i + 1) + ': ' + name + ' (';
+                if(calls[i].length) {
+                    result += calls[i].join(', ');
+                }
+
+                result += ');';
+            }
+        }
+
+        return result;
+    }
+
+    function argsMatch(source, target) {
+        if(!source) {
+            return false;
+        }
+
+        if(!target) {
+            return false;
+        }
+
+        for(var i = 0; i < source.length; i++) {
+            var sourceArg = source[i];
+            var targetArg = target[i];
+            var isMatch   = false;
+            if(typeof targetArg === 'function') {
+                isMatch = targetArg(sourceArg);
+            }
+            else {
+                isMatch = targetArg === sourceArg;
+            }
+
+            if(!isMatch) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    function functionName(fn) {
+        var name = fn.toString();
+        name = name.substr('function '.length);
+        name = name.substr(0, name.indexOf('('));
+        return name;
     }
 
     var factory = new Factory();
