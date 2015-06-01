@@ -484,7 +484,6 @@
                     throw new Error(name + ' received an unexpected a call with the specified arguments.\n' +
                                     getCallsString(calls, name));
                 }
-                console.log(wasInvoked);
                 return wasInvoked === false;
             }
 
@@ -567,8 +566,6 @@
 
     function argsMatch(source, target) {
 
-        console.log(source);
-        console.log(target);
         if(!source) {
             return false;
         }
