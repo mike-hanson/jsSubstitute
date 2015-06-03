@@ -128,4 +128,108 @@ describe('jsSubstitute Function Substitute', function(){
         sub.returnsFor(99, 1, 3)
         expect(sub(2, 3)).toBe(5);
     });
+
+    describe('Invoke Arguments Of Last Call', function(){
+
+        it('Should define a method to invoke a function argument with arguments', function(){
+            expect(sub.invokeArgOfLastCallWith).toBeDefined();
+            expect(typeof sub.invokeArgOfLastCallWith).toBe('function');
+        });
+
+        it('Should expect argument index', function(){
+            expect(sub.invokeArgOfLastCallWith.length).toBe(1);
+        });
+
+        it('Should call valid function argument', function(){
+            var wasCalled = false;
+            sub(1, function(){
+                wasCalled = true;
+            });
+            sub.invokeArgOfLastCallWith(1);
+            expect(wasCalled).toBeTruthy();
+        });
+
+        it('Should throw an error if specified argument is not a function', function()
+        {
+            sub(1, function(){
+            });
+            expect(function(){
+                sub.invokeArgOfLastCallWith(0);
+            }).toThrow(new Error('Cannot invoke argument 0 of anonymous function, it is not a function'));
+        });
+
+        it('Should pass specified arguments to function', function(){
+            var arg1, arg2;
+            sub(1, function(a, b){
+                arg1 = a;
+                arg2 = b;
+            });
+            sub.invokeArgOfLastCallWith(1, 1, 'string');
+            expect(arg1).toBe(1);
+            expect(arg2).toBe('string');
+        });
+    });
+
+    describe('Invoke Arguments Of Specific Call', function(){
+
+        it('Should define a method to invoke a function argument with arguments', function(){
+            expect(sub.invokeArgOfCallWith).toBeDefined();
+            expect(typeof sub.invokeArgOfCallWith).toBe('function');
+        });
+
+        it('Should expect call index and argument index', function(){
+            expect(sub.invokeArgOfCallWith.length).toBe(2);
+        });
+
+        it('Should call argument of first call when requested after multiple calls', function(){
+            var calledBy;
+            sub(1, function(){
+                calledBy = 1;
+            });
+            sub(2, function(){
+                calledBy = 2;
+            });
+            sub.invokeArgOfCallWith(0, 1);
+            expect(calledBy).toBe(1);
+        });
+
+        it('Should call argument of second call when requested after multiple calls', function(){
+            var calledBy;
+            sub(1, function(){
+                calledBy = 1;
+            });
+            sub(2, function(){
+                calledBy = 2;
+            });;
+            sub(3, function(){
+                calledBy = 3;
+            });
+            sub.invokeArgOfCallWith( 1, 1);
+            expect(calledBy).toBe(2);
+        });
+
+        it('Should throw an error if specified argument is not a function', function()
+        {
+            sub(1, function(){
+            });
+            sub(2, function(){
+            });
+            expect(function(){
+                sub.invokeArgOfCallWith( 1, 0);
+            }).toThrow(new Error('Cannot invoke argument 0 of call 1 of anonymous function, it is not a function'));
+        });
+
+        it('Should pass specified arguments to function', function(){
+            var arg1, arg2;
+            sub(1, function(a, b){
+            });
+            sub(2, function(a, b){
+                arg1 = a;
+                arg2 = b;
+            });
+            sub.invokeArgOfCallWith( 1, 1, 1, 'string');
+            expect(arg1).toBe(1);
+            expect(arg2).toBe('string');
+        });
+    });
 })

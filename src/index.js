@@ -30,6 +30,10 @@
         };
         this.hasState    = function(source) {
             return self.matchUsing(function(arg) {
+                if(typeof arg !== 'object')
+                {
+                    return false;
+                }
                 for(var member in source) {
                     if(source.hasOwnProperty(member) && typeof source[member] !== 'function') {
                         if(!arg.hasOwnProperty(member) || !areEqual(source[member], arg[member])) {
@@ -513,6 +517,39 @@
                 returns.push({args: actualArgs, returns: returnValue});
             }
 
+            function getCall(index) {
+                if(index === undefined)
+                {
+                    index = calls.length - 1;
+                }
+                return calls[index];
+            }
+
+            result.invokeArgOfLastCallWith = function(argIndex){
+                var call = getCall();
+                var actualArgs = argumentsSubset(arguments, 1);
+                var arg        = call[argIndex];
+                if(typeof arg === 'function') {
+                    arg.apply(null, actualArgs);
+                }
+                else {
+                    throw new Error('Cannot invoke argument ' + argIndex + ' of ' + name + ', it is not a function');
+                }
+            }
+
+            result.invokeArgOfCallWith     = function(callIndex, argIndex) {
+                var call      = getCall(callIndex);
+                var actualArgs = argumentsSubset(arguments, 2);
+                var arg        = call[argIndex];
+                if(typeof arg === 'function') {
+                    arg.apply(null, actualArgs);
+                }
+                else {
+                    throw new Error('Cannot invoke argument ' + argIndex + ' of call ' + callIndex + ' of ' + name +
+                                    ', it is not a function');
+                }
+            };
+
             function hasCallWithArgs(args)
             {
                 if(!calls.length)
@@ -615,6 +652,11 @@
         var name = fn.toString();
         name = name.substr('function '.length);
         name = name.substr(0, name.indexOf('('));
+
+        if(!name)
+        {
+            name = 'anonymous function'
+        }
         return name;
     }
 
