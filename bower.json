@@ -1,12 +1,12 @@
 {
   "name": "jssubstitute",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "homepage": "https://github.com/testpossessed/jssubstitute",
   "authors": [
     "Mike Hanson <mike@testpossessed.com>"
   ],
   "description": "Mock/Fake framework inspired by NSubstitute",
-  "main": "jssubstitute.js",
+  "main": "jsSubstitute.js",
   "moduleType": [
     "amd",
     "es6"
