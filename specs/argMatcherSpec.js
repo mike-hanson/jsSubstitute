@@ -121,22 +121,26 @@ describe('Arg', function() {
 
         it('Should pass valid assertions', function() {
             var now = new Date();
-            expect(function(){return arg.hasState({number: 1, string: 'string'})({number: 1, string: 'string'})}).toBeTruthy();
-            expect(function(){arg.hasState({number: 1, string: 'string', date: now})({
+            expect(arg.hasState({number: 1, string: 'string'})({number: 1, string: 'string'})).toBeTruthy();
+            expect(arg.hasState({number: 1, string: 'string', date: now})({
                 number: 1,
                 string: 'string',
                 date: now
-            })}).toBeTruthy();
-            expect(function(){arg.hasState({number: 1, string: 'string', array: ['one', 'two', 'three']})({
+            })).toBeTruthy();
+            expect(arg.hasState({number: 1, string: 'string', array: ['one', 'two', 'three']})({
                 number: 1,
                 string: 'string',
                 array: ['one', 'two', 'three']
-            })}).toBeTruthy();
-            expect(function(){arg.hasState({
+            })).toBeTruthy();
+            expect(arg.hasState({
                 number: 1,
                 string: 'string',
                 obj: {one: 'one', two: 'two', three: 'three'}
-            })({number: 1, string: 'string', obj: {one: 'one', two: 'two', three: 'three'}})}).toBeTruthy();
+            })({number: 1, string: 'string', obj: {one: 'one', two: 'two', three: 'three'}})).toBeTruthy();
+        });
+
+        it('Should fail invalid assertions', function () {
+            expect(arg.hasState({number: 1, string: 'string', number2: 3})({number: 1, string: 'string'})).toBeFalsy();
         });
     });
 
@@ -175,5 +179,5 @@ describe('Arg', function() {
     function assertReturnsValidAssertionFunction(target) {
         expect(typeof target).toBe('function');
         expect(target.length).toBe(1);
-    };
+    }
 });

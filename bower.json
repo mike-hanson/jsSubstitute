@@ -1,18 +1,37 @@
 {
-  "name": "jsSubtituteBuild",
-  "version": "1.0.0",
-  "homepage": "https://github.com/testpossessed/jsSubstitute",
+  "name": "jssubstitute",
+  "version": "2.1.0",
+  "homepage": "https://github.com/testpossessed/jssubstitute",
   "authors": [
     "Mike Hanson <mike@testpossessed.com>"
   ],
-  "description": "Build and test jsSubtitute for distribution via npm, bower and nuget",
+  "description": "Mock/Fake framework inspired by NSubstitute",
+  "main": "jssubstitute.js",
+  "moduleType": [
+    "amd",
+    "es6"
+  ],
+  "keywords": [
+    "testing",
+    "mocks",
+    "fakes",
+    "builders",
+    "data"
+  ],
   "license": "MIT",
-  "private": true,
   "ignore": [
-    "**/.*",
     "node_modules",
     "bower_components",
-    "test",
-    "tests"
-  ]
+    "specs",
+    "src",
+    "package.json",
+    "gruntfile.js",
+    "*.nu*",
+    "*.conf.js",
+    "index.*"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/testpossessed/jssubstitute"
+  }
 }

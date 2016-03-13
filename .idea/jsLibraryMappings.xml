@@ -2,6 +2,6 @@
 <project version="4">
   <component name="JavaScriptLibraryMappings">
     <file url="file://$PROJECT_DIR$" libraries="{jsSubstitute node_modules}" />
-    <file url="PROJECT" libraries="{Node.js v0.12.1 Core Modules, gruntjs-DefinitelyTyped, jasmine-DefinitelyTyped, karma-jasmine-DefinitelyTyped}" />
+    <file url="PROJECT" libraries="{gruntjs-DefinitelyTyped, jasmine-DefinitelyTyped}" />
   </component>
 </project>

@@ -4,7 +4,7 @@ An expressive library for creating substitutes (mocks, fakes, stubs) for testing
 ### v2.0.0 - Breaking Change
 Following the changes to support substitutes for functions I encountered some conflicts that I could not resolve after updating some of my test suites.  So I have made a breaking change to avoid the conflicts, hence bumping the major version of this library.
 
-Once you upgrade to v2.* any tests that pass a custom matcher function to **recievedWith** you will fail and probably break because this is no longer supported.  Instead you must use the **matchUsing** factory method of **substitute.arg**.
+Once you upgrade to v2.* any tests that pass a custom matcher function to **receivedWith** will fail and probably break because this is no longer supported.  Instead you must use the **matchUsing** factory method of **substitute.arg**.
 
 ```javascript
 var arg = substitute.arg;

@@ -11,7 +11,7 @@
     <projectUrl>https://github.com/testpossessed/jsSubstitute</projectUrl>
   </metadata>
   <files>
-	<file src='jsSubstitute-bower\jsSubstitute.js' target='Scripts' />
-	<file src='jsSubstitute-bower\jsSubstitute.min.js' target='Scripts' />
+	<file src='jsSubstitute.js' target='Scripts' />
+	<file src='jsSubstitute.min.js' target='Scripts' />
   </files>
  </package>
