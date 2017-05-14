@@ -67,7 +67,7 @@ module.exports = function(grunt) {
                     {
                         expand:  true,
                         cwd:     'src',
-                        src:     ['index.js'],
+                        src:     ['index.js', 'index.d.ts'],
                         filter:  'isFile',
                         flatten: true
                     }

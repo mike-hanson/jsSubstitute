@@ -1,5 +1,5 @@
 node_modules
-results
+[Rr]esults
 specs
 src
 .gitignore
@@ -8,3 +8,7 @@ gruntfile.js
 bower.json
 *.conf.js
 jsSubstitute.*
+.idea
+.vs
+wallaby.js
+.npmignore
