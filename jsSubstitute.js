@@ -390,8 +390,9 @@
         }
 
         function build(target) {
+			var prototypeMembers = Object.getOwnPropertyNames(Object.getPrototypeOf(target));
             for (var member in target) {
-                if (target.hasOwnProperty(member)) {
+                if (target.hasOwnProperty(member) || prototypeMembers.indexOf(member) > -1) {
                     var memberType = typeof target[member];
                     if (memberType !== 'function') {
                         self[member] = target[member];
