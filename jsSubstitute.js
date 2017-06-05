@@ -389,18 +389,22 @@
             self[name] = buildFunction(name);
         }
 
-        function build(target) {
-            for (var member in target) {
-                if (target.hasOwnProperty(member)) {
-                    var memberType = typeof target[member];
-                    if (memberType !== 'function') {
-                        self[member] = target[member];
-                    }
-                    else {
-                        addMember(member, target);
-                    }
-                }
+        function build(target) {            
+			var  propertyNames = Object.getOwnPropertyNames(target);			
+			var prototypeMembers = Object.getOwnPropertyNames(Object.getPrototypeOf(target));
+			var allMembers = propertyNames.concat(prototypeMembers);
+			for (var index in allMembers) {                				
+				var member = allMembers[index];
+				var memberType = typeof target[member];
+				
+				if (memberType !== 'function') {
+					self[member] = target[member];
+				}
+				else {
+					addMember(member, target);
+				}                
             }
+			
         }
 
         function buildFromArray(target) {
