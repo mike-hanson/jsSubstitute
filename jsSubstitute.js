@@ -389,19 +389,22 @@
             self[name] = buildFunction(name);
         }
 
-        function build(target) {
+        function build(target) {            
+			var  propertyNames = Object.getOwnPropertyNames(target);			
 			var prototypeMembers = Object.getOwnPropertyNames(Object.getPrototypeOf(target));
-            for (var member in target) {
-                if (target.hasOwnProperty(member) || prototypeMembers.indexOf(member) > -1) {
-                    var memberType = typeof target[member];
-                    if (memberType !== 'function') {
-                        self[member] = target[member];
-                    }
-                    else {
-                        addMember(member, target);
-                    }
-                }
+			var allMembers = propertyNames.concat(prototypeMembers);
+			for (var index in allMembers) {                				
+				var member = allMembers[index];
+				var memberType = typeof target[member];
+				
+				if (memberType !== 'function') {
+					self[member] = target[member];
+				}
+				else {
+					addMember(member, target);
+				}                
             }
+			
         }
 
         function buildFromArray(target) {
