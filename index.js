@@ -89,6 +89,7 @@
     }
 
     function PromiseSubstitute(throwErrors) {
+        var self = this;
         var successHandler, errorHandler, thenCalled = false, throwOnFailure = false;
 
         if (throwErrors) {
@@ -99,6 +100,7 @@
             thenCalled = true;
             successHandler = success;
             errorHandler = error;
+            return self;
         };
         this.success = function (data) {
             if (successHandler) {
